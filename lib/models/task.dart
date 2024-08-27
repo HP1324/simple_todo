@@ -1,14 +1,14 @@
 class Task {
   Task({required this.title, this.isDone = false});
 
-  final String title;
-  bool? isDone;
+  String title;
+  bool isDone;
 
   static List<Task> getTasksList() {
     return _tasks;
   }
 
-  static List<Task> getDoneTasksList() {
+  static List<Task> getTasksDoneList() {
     return _tasksDone;
   }
 
@@ -16,15 +16,30 @@ class Task {
     _tasks.add(this);
   }
 
-  void removeFromTaskList() {
+  void editTask({required String title}) {
+    this.title = title;
+  }
+
+  void deleteFromTaskList() {
     _tasks.remove(this);
   }
 
+  void deleteFromTasksDoneList() {
+    _tasksDone.remove(this);
+  }
+
   void markAsDone() {
+    if (!this.isDone) {
+      _tasksDone.add(this);
+    }
+    _tasks.remove(this);
     this.isDone = true;
   }
 
-  static List<Task> _tasks = [
+bool isValid() => this.title.isNotEmpty;
+
+
+  static  List<Task> _tasks = [
     Task(title: "Buy groceries"),
     Task(title: "Call mom"),
     Task(title: "Finish homework"),
