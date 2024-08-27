@@ -4,7 +4,7 @@ My first flutter app
 
 ## This app is useful for managing your small tasks
 
-#### This is just starting of this app and it has to be highly optimized 
+#### This is just starting of this app and it requires a lot of optimizations 
 
 ### Features available
 - Add tasks
