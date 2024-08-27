@@ -30,3 +30,4 @@ My first flutter app
 - Allow to make task lists
 - Make the app responsive
 - Add search task feature
+- Use more robust state management tools like ```Provider``` or ```BLoC``` 
