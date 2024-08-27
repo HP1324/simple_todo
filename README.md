@@ -1,16 +1,25 @@
-# planner
+# Simple TODO - A minimalist todo app
 
-A new Flutter project.
+My first flutter app
 
-## Getting Started
+## What is this app for?
 
-This project is a starting point for a Flutter application.
+This app is useful for managing your small tasks 
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [ ]  Store data locally with Shared Preferences
+- [ ]  Implement dismissible widget to delete tasks and to mark tasks as done
+- [ ]  Ask for confirmation when deleting a task, also ask to remember the choice
+- [ ]  Allow to select multiple tasks to delete them or mark them as done, editing multiple tasks at the same time does not make sense.
+- [ ]  Add task description
+- [ ]  Drag the tasks to move up and down
+- [ ]  Add sign in option and backup tasks on cloud
+- [ ]  Add calendar to show tasks for different days
+- [ ]  Improve UI/UX
+- [ ]  Add a small tutorial for first time download
+- [ ]  Add splash screen
+- [ ]  Add some animations
+- [ ]  Add sound effects for Add, Edit and Delete functions
+- [ ]  Add task categories
+- [ ]  Allow to make task lists
+- [ ]  Make the app responsive
+- [ ]  Add search task feature
