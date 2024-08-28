@@ -24,7 +24,6 @@ class AddTaskButton extends StatelessWidget {
         Icons.add,
         color: Colors.white,
       ),
-      backgroundColor: Colors.blue,
     );
   }
 }

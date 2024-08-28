@@ -11,11 +11,11 @@ class ListEmptyText extends StatelessWidget {
         Icon(
           Icons.task,
           size: 100,
-          color: Colors.blue.shade100,
+          color: Colors.grey,
         ),
         Text(
           text,
-          style: TextStyle(fontSize: 20,color: Colors.blue.shade200),
+          style: TextStyle(fontSize: 20,color: Colors.grey),
         ),
       ],
     );

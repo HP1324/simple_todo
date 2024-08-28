@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:planner/widgets/add_task_button.dart';
 import 'package:planner/widgets/tasks_done_list.dart';
@@ -16,6 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFFDBD2E0),
+          brightness: Brightness.dark,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -39,7 +44,9 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {setState(() {});});
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -47,11 +54,13 @@ class _MyHomePageState extends State<MyHomePage>
     _tabController.dispose();
     super.dispose();
   }
-  void _onTaskAdded(Task task){
+
+  void _onTaskAdded(Task task) {
     setState(() {
       task.addToTaskList();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +70,7 @@ class _MyHomePageState extends State<MyHomePage>
           'Planner',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue,
-        bottom:TabBar(
+        bottom: TabBar(
           controller: _tabController,
           splashBorderRadius: BorderRadius.circular(50),
           indicatorColor: Colors.blue[50],
@@ -90,7 +98,11 @@ class _MyHomePageState extends State<MyHomePage>
           TasksDoneList(),
         ],
       ),
-      floatingActionButton: _tabController.index == 0 ? AddTaskButton(onTaskAdded: _onTaskAdded,) : null,
+      floatingActionButton: _tabController.index == 0
+          ? AddTaskButton(
+              onTaskAdded: _onTaskAdded,
+            )
+          : null,
     );
   }
 }

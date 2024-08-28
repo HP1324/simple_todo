@@ -13,43 +13,44 @@ class TasksDoneList extends StatefulWidget {
 class _TasksDoneListState extends State<TasksDoneList> {
   @override
   Widget build(BuildContext context) {
-    return Task.getTasksDoneList().isEmpty?ListEmptyText() :Scrollbar(
-      child: ListView(
-        children: Task.getTasksDoneList()
-            .map(
-              (task) => Card(
-                margin: EdgeInsets.symmetric(horizontal: 10,vertical :6),
-            color: Colors.green[50],
-            elevation: 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  task.title,
-                  maxLines: null,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    overflow: TextOverflow.visible,
-                  ),
-                ),
-                IconButton(
-                  splashColor: Colors.green[200],
-                  onPressed: () {
-                    setState(() {
-                      task.deleteFromTasksDoneList();
-                      showSnackBar(context, content: 'Task deleted completely');
-                    });
-                  },
-                  icon: Icon(Icons.delete),
-                ),
-
-              ],
+    return Task.getTasksDoneList().isEmpty
+        ? ListEmptyText()
+        : Scrollbar(
+            child: ListView(
+              children: Task.getTasksDoneList()
+                  .map(
+                    (task) => Card(
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      elevation: 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            task.title,
+                            maxLines: null,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                          IconButton(
+                            splashColor: Colors.green[200],
+                            onPressed: () {
+                              setState(() {
+                                task.deleteFromTasksDoneList();
+                                showSnackBar(context,
+                                    content: 'Task deleted completely');
+                              });
+                            },
+                            icon: Icon(Icons.delete),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
-          ),
-        )
-            .toList(),
-      ),
-    );
+          );
   }
 }

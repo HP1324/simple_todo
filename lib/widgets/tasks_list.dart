@@ -24,17 +24,15 @@ class _TasksListState extends State<TasksList> {
               children: Task.getTasksList()
                   .map(
                     (task) => SizedBox(
-                      height: 60,
+                      height: 70,
                       child: Card(
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        color: Colors.green[50],
                         elevation: 4,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              splashColor: Colors.green[200],
                               padding: EdgeInsets.all(0),
                               iconSize: 25,
                               onPressed: () {
