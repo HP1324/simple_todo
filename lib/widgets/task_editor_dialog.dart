@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:planner/global_functions.dart';
 import 'package:planner/models/task.dart';
-import 'package:planner/widgets/tasks_list.dart';
 
-class TaskEditorDialog extends StatefulWidget {
-  const TaskEditorDialog({super.key});
+class TaskEditorDialog extends StatelessWidget {
+  TaskEditorDialog({super.key, required this.onTaskAdded});
+  final Function(Task) onTaskAdded;
+  final _titleController =TextEditingController();
 
-  @override
-  State<TaskEditorDialog> createState() => _TaskEditorDialogState();
-}
-
-class _TaskEditorDialogState extends State<TaskEditorDialog> {
-  var _titleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -38,17 +33,14 @@ class _TaskEditorDialogState extends State<TaskEditorDialog> {
         TextButton(
           onPressed: () {
             Task task = Task(title: _titleController.text);
-
             ///I have created a global state [tasksListState] from private state object of tasksList widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like Provider, Riverpod, BLoC or GetX, I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
-            tasksListState.setState(() {
-              if (task.isValid()) {
-                task.addToTaskList();
-                showSnackBar(context, content: 'Task added successfully');
-                Navigator.of(context).pop();
-              } else {
-                showSnackBar(context, content: 'Please enter some details');
-              }
-            });
+
+            /// Edit: now I am using a callback method to manage the state, still this is not good, because it is the callback hell.
+            if (task.isValid()) {
+              onTaskAdded(task);
+              showSnackBar(context, content: 'Task added successfully');
+              Navigator.of(context).pop();
+            }
           },
           child: Text('Save'),
         )
