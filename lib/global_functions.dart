@@ -9,7 +9,7 @@ showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin:const EdgeInsets.symmetric(horizontal: 10),
       content: Text(content),
       duration: duration,
     ),

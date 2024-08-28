@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:planner/global_functions.dart';
-import 'package:planner/lists.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/widgets/shared/list_empty_text.dart';
-import 'package:planner/widgets/task_editor_dialog.dart';
 
-//I have created a global state from private state object of tasksList widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like Provider, Riverpod, BLoC or GetX, I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
-late _TasksListState tasksListState;
+///I have created a global state from private state object of [tasksList] widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like [Provider], [Riverpod], [BLoC] or [GetX], I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
+
 
 class TasksList extends StatefulWidget {
   const TasksList({super.key});
 
   @override
-  State<TasksList> createState() {
-    tasksListState = _TasksListState();
-    return tasksListState;
-  }
+  State<TasksList> createState() => _TasksListState();
 }
 
 class _TasksListState extends State<TasksList> {
