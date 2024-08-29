@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:planner/global_functions.dart';
+import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/task_list_state_manager.dart';
 
 class TaskEditorDialog extends StatelessWidget {
-  TaskEditorDialog({super.key, required this.onTaskAdded});
-  final Function(Task) onTaskAdded;
-  final _titleController =TextEditingController();
+  TaskEditorDialog({super.key});
+  final _titleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var provider = TaskListStateManager.of(context);
     return AlertDialog(
       backgroundColor: Colors.blue.shade50,
       title: Text('Add new Task'),
@@ -33,13 +34,13 @@ class TaskEditorDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             Task task = Task(title: _titleController.text);
+
             ///I have created a global state [tasksListState] from private state object of tasksList widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like Provider, Riverpod, BLoC or GetX, I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
 
             /// Edit: now I am using a callback method to manage the state, still this is not good, because it is the callback hell.
-            if (task.isValid()) {
-              onTaskAdded(task);
-              showSnackBar(context, content: 'Task added successfully');
+            if (provider.addTask(task)) {
               Navigator.of(context).pop();
+              showSnackBar(context, content: 'Task added successfully');
             }
           },
           child: Text('Save'),

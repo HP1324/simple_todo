@@ -4,8 +4,7 @@ import 'package:planner/widgets/task_editor_dialog.dart';
 import '../models/task.dart';
 
 class AddTaskButton extends StatelessWidget {
-  const AddTaskButton({super.key,required this.onTaskAdded});
-  final Function(Task) onTaskAdded;
+  const AddTaskButton({super.key});
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -13,7 +12,7 @@ class AddTaskButton extends StatelessWidget {
         showDialog(
           context: context,
           builder: (context) {
-            return TaskEditorDialog(onTaskAdded: onTaskAdded);
+            return TaskEditorDialog();
           },
         );
       },
@@ -24,7 +23,6 @@ class AddTaskButton extends StatelessWidget {
         Icons.add,
         color: Colors.white,
       ),
-      backgroundColor: Colors.blue,
     );
   }
 }
