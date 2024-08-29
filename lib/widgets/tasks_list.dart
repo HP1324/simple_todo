@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:planner/global_functions.dart';
+import 'package:planner/task_list_state_manager.dart';
+import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/widgets/shared/list_empty_text.dart';
 
 ///I have created a global state from private state object of [tasksList] widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like [Provider], [Riverpod], [BLoC] or [GetX], I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
-
 
 class TasksList extends StatefulWidget {
   const TasksList({super.key});
@@ -17,11 +17,13 @@ class _TasksListState extends State<TasksList> {
   var _titleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Task.getTasksList().isEmpty
+    var tasks = TaskListStateManager.of(context).tasks;
+    var provider = TaskListStateManager.of(context);
+    return tasks.isEmpty
         ? ListEmptyText()
         : Scrollbar(
             child: ListView(
-              children: Task.getTasksList()
+              children: tasks
                   .map(
                     (task) => SizedBox(
                       height: 70,
@@ -36,10 +38,9 @@ class _TasksListState extends State<TasksList> {
                               padding: EdgeInsets.all(0),
                               iconSize: 25,
                               onPressed: () {
-                                setState(() {
-                                  task.markAsDone();
-                                  showSnackBar(context, content: 'Task marked as done');
-                                });
+                                provider.markTaskAsDone(task);
+                                showSnackBar(context,
+                                    content: 'Task marked as done');
                               },
                               icon: Icon(
                                 Icons.done,
@@ -58,64 +59,68 @@ class _TasksListState extends State<TasksList> {
                             ),
                             IconButton(
                               onPressed: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Edit task',),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text('Old title: ${task.title}',style: TextStyle(fontSize: 20),),
-                                          TextField(
-                                            controller: _titleController,
-                                            autofocus: true,
-                                            decoration: InputDecoration(
-                                              labelText: 'New Title',
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            maxLength: 40,
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); //close the dialog
-                                          },
-                                          child: Text('Cancel'),
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      'Edit task',
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Old title: ${task.title}',
+                                          style: TextStyle(fontSize: 20),
                                         ),
-                                        TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              task.editTask(
-                                                  title: _titleController.text);
-                                              showSnackBar(context,
-                                                  content:
-                                                      'Task Edited Successfully');
-                                            });
-                                            _titleController.clear();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('Save'),
-                                        )
+                                        TextField(
+                                          controller: _titleController,
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                            labelText: 'New Title',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          maxLength: 40,
+                                        ),
                                       ],
                                     ),
-                                  );
-                                });
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); //close the dialog
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          if (_titleController
+                                              .text.isNotEmpty) {
+                                            provider.editTask(task,
+                                                newTitle:
+                                                    '${_titleController.text}');
+                                            showSnackBar(context,
+                                                content:
+                                                    'Task Edited Successfully');
+                                          }
+                                          _titleController.clear();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Save'),
+                                      )
+                                    ],
+                                  ),
+                                );
                               },
                               icon: Icon(Icons.edit),
                             ),
                             IconButton(
                               onPressed: () {
-                                setState(() {
-                                  task.deleteFromTaskList();
-                                  showSnackBar(context, content: 'Task deleted Successfully');
-                                });
+                                provider.deleteFromTasksList(task);
+                                showSnackBar(context,
+                                    content: 'Task deleted Successfully');
                               },
                               icon: Icon(Icons.delete),
                             ),

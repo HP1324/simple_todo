@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:planner/global_functions.dart';
+import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/task_list_state_manager.dart';
 import 'package:planner/widgets/shared/list_empty_text.dart';
 
 class TasksDoneList extends StatefulWidget {
@@ -13,11 +14,13 @@ class TasksDoneList extends StatefulWidget {
 class _TasksDoneListState extends State<TasksDoneList> {
   @override
   Widget build(BuildContext context) {
-    return Task.getTasksDoneList().isEmpty
+    List<Task> tasksDone = TaskListStateManager.of(context).tasksDone;
+    var provider = TaskListStateManager.of(context);
+    return tasksDone.isEmpty
         ? ListEmptyText()
         : Scrollbar(
             child: ListView(
-              children: Task.getTasksDoneList()
+              children: tasksDone
                   .map(
                     (task) => Card(
                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -37,11 +40,9 @@ class _TasksDoneListState extends State<TasksDoneList> {
                           IconButton(
                             splashColor: Colors.green[200],
                             onPressed: () {
-                              setState(() {
-                                task.deleteFromTasksDoneList();
+                                provider.deleteFromTasksDoneList(task);
                                 showSnackBar(context,
                                     content: 'Task deleted completely');
-                              });
                             },
                             icon: Icon(Icons.delete),
                           ),
