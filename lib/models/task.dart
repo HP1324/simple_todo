@@ -36,10 +36,16 @@ class Task {
     this.isDone = true;
   }
 
-bool isValid() => this.title.isNotEmpty;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other));
+    return other is Task && other.title == title && other.isDone == isDone;
+  }
 
+  @override
+  int get hashCode => title.hashCode ^ isDone.hashCode;
 
-  static  List<Task> _tasks = [
+  static List<Task> _tasks = [
     Task(title: "Buy groceries"),
     Task(title: "Call mom"),
     Task(title: "Finish homework"),
