@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:planner/task_list_state_manager.dart';
+import 'package:planner/app_controller.dart';
 import 'package:planner/globals.dart';
-import 'package:planner/models/task.dart';
 import 'package:planner/widgets/shared/list_empty_text.dart';
+import 'package:planner/widgets/task_dialog.dart';
 
-///I have created a global state from private state object of [tasksList] widget, although this approach is extremely discouraged and no one prefers to use this, I am okay with it for some time. When I will learn more robust approaches like [Provider], [Riverpod], [BLoC] or [GetX], I will implement them. Never use this method for managing state of a widget from inside another widget which is located elsewhere in the widget tree.
+class TasksList extends StatelessWidget {
+  TasksList({super.key});
 
-class TasksList extends StatefulWidget {
-  const TasksList({super.key});
+  final _titleController = TextEditingController();
 
-  @override
-  State<TasksList> createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
-  var _titleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var tasks = TaskListStateManager.of(context).tasks;
-    var provider = TaskListStateManager.of(context);
+    var tasks = AppController.of(context).tasks;
+    var provider = AppController.of(context);
     return tasks.isEmpty
-        ? ListEmptyText()
+        ? const ListEmptyText()
         : Scrollbar(
             child: ListView(
               children: tasks
@@ -28,21 +22,21 @@ class _TasksListState extends State<TasksList> {
                     (task) => SizedBox(
                       height: 70,
                       child: Card(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         elevation: 4,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              padding: EdgeInsets.all(0),
+                              padding: const EdgeInsets.all(5),
                               iconSize: 25,
                               onPressed: () {
                                 provider.markTaskAsDone(task);
                                 showSnackBar(context,
                                     content: 'Task marked as done');
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.done,
                               ),
                             ),
@@ -60,61 +54,15 @@ class _TasksListState extends State<TasksList> {
                             IconButton(
                               onPressed: () {
                                 showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(
-                                      'Edit task',
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Old title: ${task.title}',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        TextField(
-                                          controller: _titleController,
-                                          autofocus: true,
-                                          decoration: InputDecoration(
-                                            labelText: 'New Title',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                          maxLength: 40,
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); //close the dialog
-                                        },
-                                        child: Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          if (_titleController
-                                              .text.isNotEmpty) {
-                                            provider.editTask(task,
-                                                newTitle:
-                                                    '${_titleController.text}');
-                                            showSnackBar(context,
-                                                content:
-                                                    'Task Edited Successfully');
-                                          }
-                                          _titleController.clear();
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Save'),
-                                      )
-                                    ],
-                                  ),
-                                );
+                                    context: context,
+                                    builder: (context) {
+                                      return TaskDialog(
+                                        editMode: EditMode.editTask,
+                                        task: task,
+                                      );
+                                    });
                               },
-                              icon: Icon(Icons.edit),
+                              icon: const Icon(Icons.edit),
                             ),
                             IconButton(
                               onPressed: () {
@@ -122,7 +70,7 @@ class _TasksListState extends State<TasksList> {
                                 showSnackBar(context,
                                     content: 'Task deleted Successfully');
                               },
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                             ),
                           ],
                         ),

@@ -12,40 +12,24 @@ class Task {
     return _tasksDone;
   }
 
-  void addToTaskList() {
-    _tasks.add(this);
-  }
-
-  void editTask({required String title}) {
-    this.title = title;
-  }
-
-  void deleteFromTaskList() {
-    _tasks.remove(this);
-  }
-
-  void deleteFromTasksDoneList() {
-    _tasksDone.remove(this);
-  }
-
-  void markAsDone() {
-    if (!this.isDone) {
-      _tasksDone.add(this);
-    }
-    _tasks.remove(this);
-    this.isDone = true;
-  }
-
   @override
   bool operator ==(Object other) {
-    if (identical(this, other));
+    if (identical(this, other)) ;
     return other is Task && other.title == title && other.isDone == isDone;
   }
 
   @override
   int get hashCode => title.hashCode ^ isDone.hashCode;
 
-  static List<Task> _tasks = [
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'isDone': isDone,
+      };
+  factory Task.fromJson(Map<String, dynamic> json) =>
+      Task(title: json['title'], isDone: json['isDone']);
+
+
+  static final List<Task> _tasks = [
     Task(title: "Buy groceries"),
     Task(title: "Call mom"),
     Task(title: "Finish homework"),
@@ -87,5 +71,5 @@ class Task {
     Task(title: "Update social media"),
     Task(title: "Clean the car"),
   ];
-  static List<Task> _tasksDone = [];
+  static final List<Task> _tasksDone = [];
 }

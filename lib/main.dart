@@ -1,104 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:planner/task_list_state_manager.dart';
-import 'package:planner/widgets/add_task_button.dart';
+import 'package:planner/app_controller.dart';
+import 'package:planner/widgets/task_dialog.dart';
 import 'package:planner/widgets/tasks_done_list.dart';
 import 'package:planner/widgets/tasks_list.dart';
-
-import 'models/task.dart';
+import 'package:planner/globals.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppStateProvider(
+    child: SimpleTodo(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class SimpleTodo extends StatelessWidget {
+  const SimpleTodo({super.key});
   @override
   Widget build(BuildContext context) {
-    return MainState(
-      child: MaterialApp(
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            // seedColor: Color(0xFFDBD2E0),
-            seedColor: Colors.white,
-            brightness: Brightness.dark,
-          ),
-        ),
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
-      ),
+    var provider = AppController.of(context);
+    return MaterialApp(
+      theme: provider.themeData,
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      home: const Home(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class Home extends StatelessWidget {
+  const Home({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  var _tabController;
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-
-  @override
   Widget build(BuildContext context) {
+    var provider = AppController.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        title: Text(
+        title: const Text(
           'Planner',
-          style: TextStyle(color: Colors.white),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                AppController.of(context).toggleTheme();
+              },
+              icon: Icon(Icons.light_mode))
+        ],
         bottom: TabBar(
-          controller: _tabController,
+          controller: provider.tabController,
           splashBorderRadius: BorderRadius.circular(50),
-          indicatorColor: Colors.blue[50],
           indicatorWeight: 7,
           tabs: [
             Tab(
-              child: Text(
+              child: const Text(
                 'Tasks to do',
-                style: TextStyle(color: Colors.white),
               ),
             ),
             Tab(
-              child: Text(
+              child: const Text(
                 'Tasks done',
-                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
         ),
       ),
       body: TabBarView(
-        controller: _tabController,
+        controller : provider.tabController,
         children: [
           TasksList(),
           TasksDoneList(),
         ],
       ),
-      floatingActionButton: _tabController.index == 0
-          ? AddTaskButton()
+      floatingActionButton: provider.tabController.index == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return TaskDialog(
+                        editMode: EditMode.newTask,
+                      );
+                    });
+              },
+              tooltip: 'Add Task',
+              elevation: 6,
+              shape: const CircleBorder(),
+              child: const Icon(
+                Icons.add,
+              ),
+            )
           : null,
     );
   }
