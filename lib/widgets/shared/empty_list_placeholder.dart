@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ListEmptyText extends StatelessWidget {
-  const ListEmptyText({super.key, this.text = 'No tasks to show'});
+class EmptyListPlaceholder extends StatelessWidget {
+  const EmptyListPlaceholder({super.key, this.text = 'No tasks to show'});
   final String text;
   @override
   Widget build(BuildContext context) {

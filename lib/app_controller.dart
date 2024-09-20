@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planner/app_theme.dart';
 import 'package:planner/models/task.dart';
 
 class AppStateProvider extends StatefulWidget {
@@ -8,11 +9,36 @@ class AppStateProvider extends StatefulWidget {
   State<AppStateProvider> createState() => _AppStateProviderState();
 }
 
-class _AppStateProviderState extends State<AppStateProvider> with SingleTickerProviderStateMixin{
+class _AppStateProviderState extends State<AppStateProvider>
+    with SingleTickerProviderStateMixin {
+  ///Theme state
+  ThemeData themeData = AppTheme.lightMode;
+
+  ///tab state
+  late TabController tabController;
+
+  ///tasklist and tasksdonelist state
   List<Task> tasks = Task.getTasksList();
   List<Task> tasksDone = Task.getTasksDoneList();
-  ThemeData themeData = ThemeData.light();
-  late TabController tabController;
+
+  void setChecked(Task task, bool checked) {
+    setState(() {
+      task.isDone = checked;
+    });
+  }
+
+  ///The state of app theme is manages through this function
+  void toggleTheme() {
+    setState(() {
+      if (themeData == AppTheme.lightMode) {
+        themeData = AppTheme.darkMode;
+      } else {
+        themeData = AppTheme.lightMode;
+      }
+    });
+  }
+
+  ///This part is managing whether the FAB appear or not on the screen through the tab bar's state.
   @override
   void initState() {
     super.initState();
@@ -21,20 +47,15 @@ class _AppStateProviderState extends State<AppStateProvider> with SingleTickerPr
       setState(() {});
     });
   }
-  void toggleTheme() {
-    setState(() {
-      if (themeData == ThemeData.light()) {
-        themeData = ThemeData.dark();
-      } else {
-        themeData = ThemeData.light();
-      }
-    });
-  }
+
   @override
   void dispose() {
     tabController.dispose();
     super.dispose();
   }
+
+  ///The rest of the functions are managing the state of [TasksList] and [TasksDone] list.
+  ///
   ///Returns true if [task] is successfully added.
   bool addTask(Task task) {
     if (task.title.isNotEmpty) {
@@ -54,7 +75,7 @@ class _AppStateProviderState extends State<AppStateProvider> with SingleTickerPr
     });
   }
 
-  editTask(Task task, {required String newTitle}) {
+  void editTask(Task task, {required String newTitle}) {
     setState(() {
       task.title = newTitle;
     });
@@ -62,10 +83,17 @@ class _AppStateProviderState extends State<AppStateProvider> with SingleTickerPr
 
   void markTaskAsDone(Task task) {
     setState(() {
-      if (!task.isDone) {
         tasks.remove(task);
         tasksDone.add(task);
-        task.isDone = true;
+    });
+  }
+
+  void markTaskAsUnDone(Task task) {
+    setState(() {
+      if (task.isDone) {
+        tasksDone.remove(task);
+        tasks.add(task);
+        task.isDone = false;
       }
     });
   }
@@ -98,6 +126,7 @@ class AppController extends InheritedWidget {
       required this.themeData,
       required this.tabController,
       required this.stateWidget});
+
   final List<Task> tasks;
   final List<Task> tasksDone;
   final ThemeData themeData;

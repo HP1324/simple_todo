@@ -46,6 +46,7 @@ class TaskDialog extends StatelessWidget {
                 }
               }
               if (editMode == EditMode.editTask) {
+                print(context);
                 if (titleController.text.isNotEmpty) {
                   provider.editTask(task!, newTitle: titleController.text);
                   showSnackBar(context, content: 'Task edited successfully');
