@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/models/task.dart';
 
-class AppStateProvider extends StatefulWidget {
-  const AppStateProvider({super.key, required this.child});
+class Provider extends StatefulWidget {
+  const Provider({super.key, required this.child});
   final Widget child;
   @override
-  State<AppStateProvider> createState() => _AppStateProviderState();
+  State<Provider> createState() => _ProviderState();
 }
 
-class _AppStateProviderState extends State<AppStateProvider>
-    with SingleTickerProviderStateMixin {
+class _ProviderState extends State<Provider> {
   ///Theme state
   ThemeData themeData = AppTheme.lightMode;
 
@@ -125,13 +124,13 @@ class AppController extends InheritedWidget {
   final List<Task> tasksDone;
   final ThemeData themeData;
   final int selectedNavigation;
-  final _AppStateProviderState stateWidget;
+  final _ProviderState stateWidget;
   @override
   bool updateShouldNotify(AppController oldWidget) {
     return true;
   }
 
-  static _AppStateProviderState of(BuildContext context) {
+  static _ProviderState of(BuildContext context) {
     var stateManager = context
         .dependOnInheritedWidgetOfExactType<AppController>()!
         .stateWidget;

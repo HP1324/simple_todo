@@ -8,7 +8,7 @@ import 'package:planner/widgets/tasks_list.dart';
 import 'package:planner/globals.dart';
 
 void main() {
-  runApp(const AppStateProvider(
+  runApp(const Provider(
     child: SimpleTodo(),
   ));
 }
