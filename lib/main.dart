@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:planner/app_controller.dart';
 import 'package:planner/widgets/task_dialog.dart';
 import 'package:planner/widgets/tasks_done_list.dart';
@@ -30,51 +32,47 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = AppController.of(context);
     return Scaffold(
       appBar: buildAppBar(context),
-      body: buildTabBarView(context),
+      body: [TasksList(), TasksDoneList()][provider.selectedDestination],
       floatingActionButton: buildFloatingActionButton(context),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: provider.selectedDestination,
+        height: 70,
+        destinations: [
+          NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
+          NavigationDestination(icon: Icon(Icons.done_all), label: 'Done'),
+        ],
+        onDestinationSelected: (selected) =>
+            provider.onDestinationSelected(selected),
+      ),
     );
   }
 
-  dynamic buildFloatingActionButton(BuildContext context) {
-    var provider = AppController.of(context);
-    if (provider.tabController.index == 0) {
-      return FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return TaskDialog(
-                  editMode: EditMode.newTask,
-                );
-              });
-        },
-        tooltip: 'Add Task',
-        elevation: 6,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.add,
-        ),
-      );
-    }
-    return null;
-  }
-
-  TabBarView buildTabBarView(BuildContext context) {
-    var provider = AppController.of(context);
-    return TabBarView(
-      controller: provider.tabController,
-      children: [
-        TasksList(),
-        TasksDoneList(),
-      ],
+  FloatingActionButton buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return TaskDialog(
+                editMode: EditMode.newTask,
+              );
+            });
+      },
+      tooltip: 'Add Task',
+      elevation: 6,
+      shape: const CircleBorder(),
+      child: const Icon(
+        Icons.add,
+      ),
     );
   }
 
   AppBar buildAppBar(BuildContext context) {
-    var provider = AppController.of(context);
     return AppBar(
+      toolbarHeight: 70,
       elevation: 5,
       title: const Text(
         'Planner',
@@ -86,24 +84,6 @@ class Home extends StatelessWidget {
             },
             icon: Icon(Icons.light_mode))
       ],
-      bottom: TabBar(
-        indicatorSize: TabBarIndicatorSize.tab,
-        controller: provider.tabController,
-        splashBorderRadius: BorderRadius.circular(10),
-        indicatorWeight: 7,
-        tabs: [
-          Tab(
-            child: const Text(
-              'To do',
-            ),
-          ),
-          Tab(
-            child: const Text(
-              'Done',
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

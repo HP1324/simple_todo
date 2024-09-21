@@ -14,8 +14,6 @@ class _AppStateProviderState extends State<AppStateProvider>
   ///Theme state
   ThemeData themeData = AppTheme.lightMode;
 
-  ///tab state
-  late TabController tabController;
 
   ///tasklist and tasksdonelist state
   List<Task> tasks = Task.getTasksList();
@@ -38,22 +36,12 @@ class _AppStateProviderState extends State<AppStateProvider>
     });
   }
 
-  ///This part is managing whether the FAB appears or not on the screen through the tab bar's state.
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 2, vsync: this);
-    tabController.addListener(() {
-      setState(() {});
-    });
-  }
+  ///This part is managing the [NavigationBar]'s selected destination state
 
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
+  var selectedDestination = 0;
+  void onDestinationSelected(int selected){
+    setState(()=> selectedDestination = selected);
   }
-
   ///The rest of the functions are managing the state of [TasksList] and [TasksDone] list.
   ///
   ///Returns true if [task] is successfully added.
@@ -117,7 +105,7 @@ class _AppStateProviderState extends State<AppStateProvider>
       tasksDone: tasksDone,
       themeData: themeData,
       stateWidget: this,
-      tabController: tabController,
+      selectedNavigation: selectedDestination,
       child: widget.child,
     );
   }
@@ -130,13 +118,13 @@ class AppController extends InheritedWidget {
       required this.tasks,
       required this.tasksDone,
       required this.themeData,
-      required this.tabController,
+      required this.selectedNavigation,
       required this.stateWidget});
 
   final List<Task> tasks;
   final List<Task> tasksDone;
   final ThemeData themeData;
-  final TabController tabController;
+  final int selectedNavigation;
   final _AppStateProviderState stateWidget;
   @override
   bool updateShouldNotify(AppController oldWidget) {

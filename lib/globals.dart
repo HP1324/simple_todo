@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 showSnackBar(
   BuildContext context, {
   required String content,
-  Duration duration = const Duration(seconds: 1),
+  Duration duration = const Duration(milliseconds: 800),
 }) {
   ///removeCurrentSnackbar will prevent the snackbar from showing up multiple times when user does some operations(add, delete, mark as done) back to back.
   ScaffoldMessenger.of(context)
