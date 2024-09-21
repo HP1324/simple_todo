@@ -13,9 +13,10 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
     return Card(
-      elevation: 2,
+      elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ListTile(
+          contentPadding: const EdgeInsets.all(5),
           leading: listType == ListType.tasksList
               ? Checkbox(
                   value: task.isDone,
@@ -31,12 +32,20 @@ class TaskTile extends StatelessWidget {
               : null,
           title: Text(task.title),
           trailing: PopupMenuButton(
+            padding: EdgeInsets.zero,
+            position: PopupMenuPosition.under,
+            popUpAnimationStyle: AnimationStyle(
+              duration: const Duration(milliseconds: 500),
+              reverseDuration: const Duration(milliseconds:100),
+              curve: Curves.easeOutQuad,
+              reverseCurve: Curves.easeIn,
+            ),
             itemBuilder: (context) {
               return [
                 if (listType == ListType.tasksDoneList)
                   PopupMenuItem(
                     onTap: () {
-                      Future.delayed(const Duration(seconds: 1), () {
+                      Future.delayed(const Duration(milliseconds: 800), () {
                         provider.markTaskAsUnDone(task);
                       });
                       showSnackBar(context,

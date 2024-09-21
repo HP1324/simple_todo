@@ -27,7 +27,7 @@ class _AppStateProviderState extends State<AppStateProvider>
     });
   }
 
-  ///The state of app theme is manages through this function
+  ///The state of app theme is managed through this function
   void toggleTheme() {
     setState(() {
       if (themeData == AppTheme.lightMode) {
@@ -38,7 +38,7 @@ class _AppStateProviderState extends State<AppStateProvider>
     });
   }
 
-  ///This part is managing whether the FAB appear or not on the screen through the tab bar's state.
+  ///This part is managing whether the FAB appears or not on the screen through the tab bar's state.
   @override
   void initState() {
     super.initState();
@@ -58,6 +58,7 @@ class _AppStateProviderState extends State<AppStateProvider>
   ///
   ///Returns true if [task] is successfully added.
   bool addTask(Task task) {
+    task.title = task.title.trim();
     if (task.title.isNotEmpty) {
       setState(() {
         tasks.add(task);
@@ -74,17 +75,22 @@ class _AppStateProviderState extends State<AppStateProvider>
       }
     });
   }
-
-  void editTask(Task task, {required String newTitle}) {
-    setState(() {
-      task.title = newTitle;
-    });
+  ///Returns true if [task] is successfully edited.
+  bool editTask(Task task, {required String newTitle}) {
+    var trimmed = newTitle.trim();
+    if (trimmed.isNotEmpty) {
+      setState(() {
+        task.title = trimmed;
+      });
+      return true;
+    }
+    return false;
   }
 
   void markTaskAsDone(Task task) {
     setState(() {
-        tasks.remove(task);
-        tasksDone.add(task);
+      tasks.remove(task);
+      tasksDone.add(task);
     });
   }
 

@@ -46,13 +46,10 @@ class TaskDialog extends StatelessWidget {
                 }
               }
               if (editMode == EditMode.editTask) {
-                print(context);
-                if (titleController.text.isNotEmpty) {
-                  provider.editTask(task!, newTitle: titleController.text);
+                if (provider.editTask(task!, newTitle: titleController.text)) {
+                Navigator.of(context).pop();
                   showSnackBar(context, content: 'Task edited successfully');
                 }
-                titleController.clear();
-                Navigator.of(context).pop();
               }
             },
             child: const Text('Save')),
