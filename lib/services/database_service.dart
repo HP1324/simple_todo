@@ -31,22 +31,21 @@ class DatabaseService {
 
   static Future<void> toggleDone(Task task, String tableName) async {
     ///To maintain atomicity, which means when dealing with multiple transactions, all transactions must be completed or none should be completed. In our case, there are two transactions, one is to delete it from the previous list and the other is inserting the data to another list. [list == table]
-    final database = await DatabaseService.openDb();
-    if (tableName == 'tasks' && !task.isDone) {
-      database.transaction((txn) async {
-        await txn.delete('tasks', where: 'title = ?', whereArgs: [task.title]);
-        await txn.insert('tasksDone', {'title': task.title, 'isDone': 1});
-      });
-      // task.isDone = true;
-    }
-    if (tableName == 'tasksDone' && task.isDone) {
-      database.transaction((txn) async {
-        await txn
-            .delete('tasksDone', where: 'title = ?', whereArgs: [task.title]);
-        await txn.insert('tasks', {'title': task.title, 'isDone': 0});
-      });
-      // task.isDone = false;
-    }
+    try {
+      final database = await DatabaseService.openDb();
+      if (tableName == 'tasks') {
+        database.transaction((txn) async {
+          await txn.delete('tasks', where: 'title = ?', whereArgs: [task.title]);
+          await txn.insert('tasksDone', {'title': task.title, 'isDone': 1});
+        });
+      }
+      if (tableName == 'tasksDone') {
+        database.transaction((txn) async {
+          await txn.delete('tasksDone', where: 'title = ?', whereArgs: [task.title]);
+          await txn.insert('tasks', {'title': task.title, 'isDone': 0});
+        });
+      }
+    }catch(exception){print('Error toggling taskdone status: $exception');}
   }
 
   static Future<List<Map<String, dynamic>>> getTasks() async {

@@ -12,8 +12,8 @@ class Provider extends StatefulWidget {
 
 class _ProviderState extends State<Provider> {
   ///Database control is over here
-List<Map<String, dynamic>> tasks = [];
-List<Map<String, dynamic>> tasksDone = [];
+  List<Map<String, dynamic>> tasks = [];
+  List<Map<String, dynamic>> tasksDone = [];
   void _refreshData() async {
     final data = await DatabaseService.getTasks();
     final dataDone = await DatabaseService.getTasksDone();
@@ -32,25 +32,21 @@ List<Map<String, dynamic>> tasksDone = [];
   ///Theme state
   ThemeData themeData = AppTheme.lightMode;
 
-
   ///The state of app theme is managed through this function
   void toggleTheme() {
-    setState(() {
-      if (themeData == AppTheme.lightMode) {
-        themeData = AppTheme.darkMode;
-      } else {
-        themeData = AppTheme.lightMode;
-      }
-    });
+    setState(() => themeData = themeData == AppTheme.lightMode
+        ? themeData = AppTheme.darkMode
+        : themeData = AppTheme.lightMode);
   }
 
-  ///Checkbox state
-  void setChecked(bool oldValue,bool newValue) {
-    print('oldvalue: ${oldValue.hashCode}');
+  ///Checkbox state management
+ void toggleChecked(Task task, bool? newValue) {
     setState(() {
-      oldValue = newValue;
+      task.isDone = newValue!;
     });
+    task.isDone = !task.isDone;
   }
+
   ///This part is managing the [NavigationBar]'s selected destination state
 
   var selectedDestination = 0;
@@ -72,12 +68,16 @@ List<Map<String, dynamic>> tasksDone = [];
   }
 
   ///Delete  [thisTask] [fromThislist]
-  Future<void> deleteFromList({required Task thisTask, required String fromThisList}) async{
-    await DatabaseService.deleteTask(title: thisTask.title,tableName: fromThisList);
+  Future<void> deleteFromList(
+      {required Task thisTask, required String fromThisList}) async {
+    await DatabaseService.deleteTask(
+        title: thisTask.title, tableName: fromThisList);
     _refreshData();
   }
+
   ///Returns true if [task] is successfully edited.
-  Future<bool> editTask({required String oldTitle,required String newTitle}) async {
+  Future<bool> editTask(
+      {required String oldTitle, required String newTitle}) async {
     var trimmed = oldTitle.trim();
     if (trimmed.isNotEmpty) {
       await DatabaseService.editTask(trimmed, newTitle, false);
@@ -86,10 +86,21 @@ List<Map<String, dynamic>> tasksDone = [];
     }
     return false;
   }
-  Future<void> toggleDone(Task task, String tableName)async{
-    await DatabaseService.toggleDone(task, tableName);
+
+  Future<void> toggleDone(Task task) async {
+    if (!task.isDone) {
+      await DatabaseService.toggleDone(task, 'tasks');
+      task.isDone = true;
+    }
+
+    ///Using only if here is a silly mistake, because task.isDone is set to true in the first if, so the second if will also run even if we don't want to do that. To solve that I have to use else if, instead of just if, to ensure only one of the blocks run
+    else if (task.isDone) {
+      await DatabaseService.toggleDone(task, 'tasksDone');
+      task.isDone = false;
+    }
     _refreshData();
   }
+
   @override
   Widget build(BuildContext context) {
     return AppController(

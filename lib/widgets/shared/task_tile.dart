@@ -20,14 +20,14 @@ class TaskTile extends StatelessWidget {
           leading: listType == ListType.tasksList
               ? Checkbox(
                   value: task.isDone,
-                  onChanged: (newValue) {
-                    Future.delayed(const Duration(milliseconds: 800), () {
-                      provider.toggleDone(task, 'tasks');
-                      showSnackBar(context, content: 'Task marked as done');
+                  onChanged: (newValue) async {
+                    provider.toggleChecked(task, newValue);
+                    showSnackBar(context, content: 'Task marked as done');
+                    await Future.delayed(const Duration(milliseconds: 800), () async {
+                      await provider.toggleDone(task);
                     });
-                    print('isDone: ${task.isDone.hashCode}');
-                    provider.setChecked(task.isDone, newValue!);
-                  })
+                  },
+                )
               : null,
           title: Text(task.title),
           trailing: PopupMenuButton(
@@ -44,8 +44,7 @@ class TaskTile extends StatelessWidget {
                   PopupMenuItem(
                     onTap: () {
                       Future.delayed(const Duration(milliseconds: 800), () {
-                        print(" this is the value : ${task.isDone}");
-                        provider.toggleDone(task, 'tasksDone');
+                        provider.toggleDone(task);
                       });
                       showSnackBar(context,
                           content:
