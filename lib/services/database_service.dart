@@ -64,8 +64,6 @@ class DatabaseService {
     final data = {'title': newTitle, 'isDone': isDone == true ? 1 : 0};
     final result = await database
         .update('tasks', data, where: 'title = ?', whereArgs: [oldTitle]);
-    print(result);
-    print(newTitle);
     return result;
   }
 

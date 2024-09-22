@@ -7,7 +7,7 @@ class Task {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) ;
-    return other is Task && other.title == title && other.isDone == isDone;
+    return other is Task && other.title == title && other.isDone == isDone && hashCode == other.hashCode;
   }
 
   @override
