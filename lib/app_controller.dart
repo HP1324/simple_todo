@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/services/database_service.dart';
 
 class Provider extends StatefulWidget {
   const Provider({super.key, required this.child});
@@ -10,19 +11,27 @@ class Provider extends StatefulWidget {
 }
 
 class _ProviderState extends State<Provider> {
+  ///Database control is over here
+List<Map<String, dynamic>> tasks = [];
+List<Map<String, dynamic>> tasksDone = [];
+  void _refreshData() async {
+    final data = await DatabaseService.getTasks();
+    final dataDone = await DatabaseService.getTasksDone();
+    setState(() {
+      tasks = data;
+      tasksDone = dataDone;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
   ///Theme state
   ThemeData themeData = AppTheme.lightMode;
 
-
-  ///tasklist and tasksdonelist state
-  List<Task> tasks = Task.getTasksList();
-  List<Task> tasksDone = Task.getTasksDoneList();
-
-  void setChecked(Task task, bool checked) {
-    setState(() {
-      task.isDone = checked;
-    });
-  }
 
   ///The state of app theme is managed through this function
   void toggleTheme() {
@@ -35,68 +44,52 @@ class _ProviderState extends State<Provider> {
     });
   }
 
+  ///Checkbox state
+  void setChecked(bool oldValue,bool newValue) {
+    print('oldvalue: ${oldValue.hashCode}');
+    setState(() {
+      oldValue = newValue;
+    });
+  }
   ///This part is managing the [NavigationBar]'s selected destination state
 
   var selectedDestination = 0;
-  void onDestinationSelected(int selected){
-    setState(()=> selectedDestination = selected);
+  void onDestinationSelected(int selected) {
+    setState(() => selectedDestination = selected);
   }
+
   ///The rest of the functions are managing the state of [TasksList] and [TasksDone] list.
   ///
   ///Returns true if [task] is successfully added.
-  bool addTask(Task task) {
+  Future<bool> addTask(Task task) async {
     task.title = task.title.trim();
     if (task.title.isNotEmpty) {
-      setState(() {
-        tasks.add(task);
-      });
+      await DatabaseService.addTask(task.title, task.isDone);
+      _refreshData();
       return true;
     }
     return false;
   }
 
-  void deleteFromTasksList(Task task) {
-    setState(() {
-      if (tasks.contains(task)) {
-        tasks.remove(task);
-      }
-    });
+  ///Delete  [thisTask] [fromThislist]
+  Future<void> deleteFromList({required Task thisTask, required String fromThisList}) async{
+    await DatabaseService.deleteTask(title: thisTask.title,tableName: fromThisList);
+    _refreshData();
   }
   ///Returns true if [task] is successfully edited.
-  bool editTask(Task task, {required String newTitle}) {
-    var trimmed = newTitle.trim();
+  Future<bool> editTask({required String oldTitle,required String newTitle}) async {
+    var trimmed = oldTitle.trim();
     if (trimmed.isNotEmpty) {
-      setState(() {
-        task.title = trimmed;
-      });
+      await DatabaseService.editTask(trimmed, newTitle, false);
+      _refreshData();
       return true;
     }
     return false;
   }
-
-  void markTaskAsDone(Task task) {
-    setState(() {
-      tasks.remove(task);
-      tasksDone.add(task);
-    });
+  Future<void> toggleDone(Task task, String tableName)async{
+    await DatabaseService.toggleDone(task, tableName);
+    _refreshData();
   }
-
-  void markTaskAsUnDone(Task task) {
-    setState(() {
-      if (task.isDone) {
-        tasksDone.remove(task);
-        tasks.add(task);
-        task.isDone = false;
-      }
-    });
-  }
-
-  void deleteFromTasksDoneList(Task task) {
-    setState(() {
-      tasksDone.remove(task);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppController(
@@ -120,8 +113,8 @@ class AppController extends InheritedWidget {
       required this.selectedNavigation,
       required this.stateWidget});
 
-  final List<Task> tasks;
-  final List<Task> tasksDone;
+  final List<Map<String, dynamic>> tasks;
+  final List<Map<String, dynamic>> tasksDone;
   final ThemeData themeData;
   final int selectedNavigation;
   final _ProviderState stateWidget;

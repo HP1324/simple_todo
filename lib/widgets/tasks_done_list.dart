@@ -15,14 +15,14 @@ class TasksDoneList extends StatefulWidget {
 class _TasksDoneListState extends State<TasksDoneList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> tasksDone = AppController.of(context).tasksDone;
+    List<Map<String,dynamic>> tasksDone = AppController.of(context).tasksDone;
     return tasksDone.isEmpty
         ?const EmptyListPlaceholder()
         : Scrollbar(
             child: ListView(
               children: tasksDone
                   .map(
-                    (task) => TaskTile(task: task,listType: ListType.tasksDoneList,))
+                    (task) => TaskTile(task: Task.fromJson(task),listType: ListType.tasksDoneList,))
                   .toList(),
             ),
           );
