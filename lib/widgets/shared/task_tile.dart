@@ -4,11 +4,16 @@ import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/widgets/task_dialog.dart';
 
-class TaskTile extends StatelessWidget {
+class TaskTile extends StatefulWidget {
   const TaskTile({super.key, required this.task, required this.listType});
   final Task task;
   final ListType listType;
 
+  @override
+  State<TaskTile> createState() => _TaskTileState();
+}
+
+class _TaskTileState extends State<TaskTile> {
   @override
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
@@ -17,19 +22,21 @@ class TaskTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ListTile(
           contentPadding: const EdgeInsets.all(5),
-          leading: listType == ListType.tasksList
+          leading: widget.listType == ListType.tasksList
               ? Checkbox(
-                  value: task.isDone,
+                  value: widget.task.isDone,
                   onChanged: (newValue) async {
                     showSnackBar(context, content: 'Task marked as done');
-                    await Future.delayed(const Duration(milliseconds: 800), () async {
-                      await provider.toggleDone(task);
+                    setState(()=> widget.task.isDone = newValue!);
+                    // widget.task.isDone = !widget.task.isDone;
+                    await Future.delayed(const Duration(milliseconds: 4000), () async {
+                       widget.task.isDone = !widget.task.isDone;
+                      await provider.toggleDone(widget.task);
                     });
-
                   },
                 )
               : null,
-          title: Text(task.title),
+          title: Text(widget.task.title),
           trailing: PopupMenuButton(
             position: PopupMenuPosition.under,
             popUpAnimationStyle: AnimationStyle(
@@ -40,12 +47,12 @@ class TaskTile extends StatelessWidget {
             ),
             itemBuilder: (context) {
               return [
-                if (listType == ListType.tasksDoneList)
+                if (widget.listType == ListType.tasksDoneList)
                   PopupMenuItem(
                     onTap: () {
-                      print('tasksDoneList: ${task.isDone}');
+                      print('tasksDoneList: ${widget.task.isDone}');
                       Future.delayed(const Duration(milliseconds: 800), () {
-                        provider.toggleDone(task);
+                        provider.toggleDone(widget.task);
                       });
                       showSnackBar(context,
                           content:
@@ -53,28 +60,28 @@ class TaskTile extends StatelessWidget {
                     },
                     child: const Text('Mark as undone'),
                   ),
-                if (listType == ListType.tasksList)
+                if (widget.listType == ListType.tasksList)
                   PopupMenuItem(
                     onTap: () {
-                      print('tasksList: ${task.isDone}');
+                      print('tasksList: ${widget.task.isDone}');
                       showDialog(
                           context: context,
                           builder: (context) {
                             return TaskDialog(
-                                task: task, editMode: EditMode.editTask);
+                                task: widget.task, editMode: EditMode.editTask);
                           });
                     },
                     child: const Text('Edit'),
                   ),
                 PopupMenuItem(
                   onTap: () {
-                    if (listType == ListType.tasksList) {
+                    if (widget.listType == ListType.tasksList) {
                       provider.deleteFromList(
-                          thisTask: task, fromThisList: 'tasks');
+                          thisTask: widget.task, fromThisList: 'tasks');
                     }
-                    else if (listType == ListType.tasksDoneList) {
+                    else if (widget.listType == ListType.tasksDoneList) {
                       provider.deleteFromList(
-                          thisTask: task, fromThisList: 'tasksDone');
+                          thisTask: widget.task, fromThisList: 'tasksDone');
                     }
                     showSnackBar(context, content: 'Task deleted !');
                   },

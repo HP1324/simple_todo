@@ -17,10 +17,6 @@ class _ProviderState extends State<Provider> {
   void _refreshData() async {
     final data = await DatabaseService.getTasks();
     final dataDone = await DatabaseService.getTasksDone();
-    print(data);
-    print(dataDone);
-    print(data.length);
-    print(dataDone.length);
     setState(() {
       tasks = data;
       tasksDone = dataDone;
@@ -50,7 +46,10 @@ class _ProviderState extends State<Provider> {
     });
     task.isDone = !task.isDone;
   }
-
+  // Icon icon = Icon(Icons.check_box_outline_blank);
+  // void toggleCheckIcon(Task task){ setState(() {
+  //   if(task.isDone)
+  // });}
   ///This part is managing the [NavigationBar]'s selected destination state
 
   var selectedDestination = 0;
