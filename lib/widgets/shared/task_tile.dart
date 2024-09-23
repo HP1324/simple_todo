@@ -21,11 +21,11 @@ class TaskTile extends StatelessWidget {
               ? Checkbox(
                   value: task.isDone,
                   onChanged: (newValue) async {
-                    provider.toggleChecked(task, newValue);
                     showSnackBar(context, content: 'Task marked as done');
                     await Future.delayed(const Duration(milliseconds: 800), () async {
                       await provider.toggleDone(task);
                     });
+
                   },
                 )
               : null,
@@ -43,6 +43,7 @@ class TaskTile extends StatelessWidget {
                 if (listType == ListType.tasksDoneList)
                   PopupMenuItem(
                     onTap: () {
+                      print('tasksDoneList: ${task.isDone}');
                       Future.delayed(const Duration(milliseconds: 800), () {
                         provider.toggleDone(task);
                       });
@@ -55,6 +56,7 @@ class TaskTile extends StatelessWidget {
                 if (listType == ListType.tasksList)
                   PopupMenuItem(
                     onTap: () {
+                      print('tasksList: ${task.isDone}');
                       showDialog(
                           context: context,
                           builder: (context) {
@@ -70,7 +72,7 @@ class TaskTile extends StatelessWidget {
                       provider.deleteFromList(
                           thisTask: task, fromThisList: 'tasks');
                     }
-                    if (listType == ListType.tasksDoneList) {
+                    else if (listType == ListType.tasksDoneList) {
                       provider.deleteFromList(
                           thisTask: task, fromThisList: 'tasksDone');
                     }

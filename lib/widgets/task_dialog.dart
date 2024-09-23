@@ -39,7 +39,6 @@ class TaskDialog extends StatelessWidget {
         TextButton(
             onPressed: () async{
               final navigator = Navigator.of(context);
-              final snackbar = showSnackBar(context, content: 'Task edited successfully');
               if (editMode == EditMode.newTask) {
                 Task task = Task(title: titleController.text,isDone: false);
                 if (await provider.addTask(task)) {
@@ -49,8 +48,8 @@ class TaskDialog extends StatelessWidget {
               }
               if (editMode == EditMode.editTask) {
                 if (await provider.editTask(oldTitle : task!.title,newTitle: titleController.text)) {
+                showSnackBar(context, content: 'Task edited successfully');
                 navigator.pop();
-                  snackbar();
                 }
               }
             },

@@ -17,6 +17,10 @@ class _ProviderState extends State<Provider> {
   void _refreshData() async {
     final data = await DatabaseService.getTasks();
     final dataDone = await DatabaseService.getTasksDone();
+    print(data);
+    print(dataDone);
+    print(data.length);
+    print(dataDone.length);
     setState(() {
       tasks = data;
       tasksDone = dataDone;
@@ -90,15 +94,13 @@ class _ProviderState extends State<Provider> {
   Future<void> toggleDone(Task task) async {
     if (!task.isDone) {
       await DatabaseService.toggleDone(task, 'tasks');
-      task.isDone = true;
     }
-
-    ///Using only if here is a silly mistake, because task.isDone is set to true in the first if, so the second if will also run even if we don't want to do that. To solve that I have to use else if, instead of just if, to ensure only one of the blocks run
     else if (task.isDone) {
       await DatabaseService.toggleDone(task, 'tasksDone');
-      task.isDone = false;
     }
     _refreshData();
+
+    ///Using only if here was a silly mistake, because task.isDone is set to true in the first if, so the second if will also run even if we don't want to do that. To solve that I have to use else if, instead of just if, to ensure only one of the blocks run
   }
 
   @override

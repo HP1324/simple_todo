@@ -5,9 +5,9 @@ class Task {
   bool isDone;
 
   @override
+  ///Check this for tasks.contains
   bool operator ==(Object other) {
-    if (identical(this, other)) ;
-    return other is Task && other.title == title && other.isDone == isDone && hashCode == other.hashCode;
+    return other is Task && other.title == title && other.isDone == isDone;
   }
 
   @override
