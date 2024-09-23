@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:planner/app_controller.dart';
 import 'package:planner/widgets/task_dialog.dart';
@@ -8,7 +7,7 @@ import 'package:planner/widgets/tasks_list.dart';
 import 'package:planner/globals.dart';
 
 void main() {
-  runApp(const AppStateProvider(
+  runApp(const Provider(
     child: SimpleTodo(),
   ));
 }

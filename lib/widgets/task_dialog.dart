@@ -37,18 +37,19 @@ class TaskDialog extends StatelessWidget {
           child: const Text('Cancel'),
         ),
         TextButton(
-            onPressed: () {
+            onPressed: () async{
+              final navigator = Navigator.of(context);
               if (editMode == EditMode.newTask) {
-                Task task = Task(title: titleController.text);
-                if (provider.addTask(task)) {
-                  Navigator.of(context).pop();
+                Task task = Task(title: titleController.text,isDone: false);
+                if (await provider.addTask(task)) {
+                  navigator.pop();
                   showSnackBar(context, content: 'Task added successfully');
                 }
               }
               if (editMode == EditMode.editTask) {
-                if (provider.editTask(task!, newTitle: titleController.text)) {
-                Navigator.of(context).pop();
-                  showSnackBar(context, content: 'Task edited successfully');
+                if (await provider.editTask(task: task!,newTitle: titleController.text)) {
+                showSnackBar(context, content: 'Task edited successfully');
+                navigator.pop();
                 }
               }
             },
