@@ -20,8 +20,6 @@ class _ProviderState extends State<Provider> {
     setState(() {
       tasks = data;
       tasksDone = dataDone;
-      print(data);
-      print(dataDone);
     });
   }
 

@@ -21,7 +21,7 @@ class SimpleTodo extends StatelessWidget {
       theme: provider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'MinimalTodo',
-      home: Home(),
+      home: const Home(),
     );
   }
 }
@@ -34,12 +34,12 @@ class Home extends StatelessWidget {
     var provider = AppController.of(context);
     return Scaffold(
       appBar: buildAppBar(context),
-      body: [TasksList(), TasksDoneList()][provider.selectedDestination],
+      body: [const TasksList(), const TasksDoneList()][provider.selectedDestination],
       floatingActionButton: buildFloatingActionButton(context),
       bottomNavigationBar: NavigationBar(
         selectedIndex: provider.selectedDestination,
         height: 70,
-        destinations: [
+        destinations: const [
           NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
           NavigationDestination(icon: Icon(Icons.done_all), label: 'Done'),
         ],
@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
         showDialog(
             context: context,
             builder: (context) {
-              return TaskDialog(
+              return const TaskDialog(
                 editMode: EditMode.newTask,
               );
             });
@@ -81,7 +81,7 @@ class Home extends StatelessWidget {
             onPressed: () {
               AppController.of(context).toggleTheme();
             },
-            icon: Icon(Icons.light_mode))
+            icon: const Icon(Icons.light_mode))
       ],
     );
   }

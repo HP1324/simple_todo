@@ -9,14 +9,14 @@ class EmptyListPlaceholder extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.task,
             size: 100,
             color: Colors.grey,
           ),
           Text(
             text,
-            style: TextStyle(fontSize: 20,color: Colors.grey),
+            style: const TextStyle(fontSize: 20,color: Colors.grey),
           ),
         ],
       ),
