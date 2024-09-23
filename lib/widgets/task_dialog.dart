@@ -47,7 +47,7 @@ class TaskDialog extends StatelessWidget {
                 }
               }
               if (editMode == EditMode.editTask) {
-                if (await provider.editTask(oldTitle : task!.title,newTitle: titleController.text)) {
+                if (await provider.editTask(task: task!,newTitle: titleController.text)) {
                 showSnackBar(context, content: 'Task edited successfully');
                 navigator.pop();
                 }

@@ -4,16 +4,11 @@ import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/widgets/task_dialog.dart';
 
-class TaskTile extends StatefulWidget {
+class TaskTile extends StatelessWidget {
   const TaskTile({super.key, required this.task, required this.listType});
   final Task task;
   final ListType listType;
 
-  @override
-  State<TaskTile> createState() => _TaskTileState();
-}
-
-class _TaskTileState extends State<TaskTile> {
   @override
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
@@ -21,75 +16,68 @@ class _TaskTileState extends State<TaskTile> {
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ListTile(
-          contentPadding: const EdgeInsets.all(5),
-          leading: widget.listType == ListType.tasksList
-              ? Checkbox(
-                  value: widget.task.isDone,
+        contentPadding: const EdgeInsets.all(5),
+        leading: listType == ListType.tasksList?
+                 Checkbox(
+                  value: task.isDone,
                   onChanged: (newValue) async {
                     showSnackBar(context, content: 'Task marked as done');
-                    setState(()=> widget.task.isDone = newValue!);
-                    // widget.task.isDone = !widget.task.isDone;
-                    await Future.delayed(const Duration(milliseconds: 4000), () async {
-                       widget.task.isDone = !widget.task.isDone;
-                      await provider.toggleDone(widget.task);
+                    ///TODO : Fix checkbox not getting checked issue
+                    provider.toggleChecked(task, newValue);
+                    await Future.delayed(const Duration(milliseconds: 800),
+                        () async {
+                      await provider.toggleDone(task);
                     });
                   },
                 )
-              : null,
-          title: Text(widget.task.title),
-          trailing: PopupMenuButton(
-            position: PopupMenuPosition.under,
-            popUpAnimationStyle: AnimationStyle(
-              duration: const Duration(milliseconds: 500),
-              reverseDuration: const Duration(milliseconds: 100),
-              curve: Curves.easeOutQuad,
-              reverseCurve: Curves.easeIn,
-            ),
-            itemBuilder: (context) {
-              return [
-                if (widget.listType == ListType.tasksDoneList)
-                  PopupMenuItem(
-                    onTap: () {
-                      print('tasksDoneList: ${widget.task.isDone}');
-                      Future.delayed(const Duration(milliseconds: 800), () {
-                        provider.toggleDone(widget.task);
-                      });
-                      showSnackBar(context,
-                          content:
-                              'Task marked as undone and added to the last of tasks to do list');
-                    },
-                    child: const Text('Mark as undone'),
-                  ),
-                if (widget.listType == ListType.tasksList)
-                  PopupMenuItem(
-                    onTap: () {
-                      print('tasksList: ${widget.task.isDone}');
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return TaskDialog(
-                                task: widget.task, editMode: EditMode.editTask);
-                          });
-                    },
-                    child: const Text('Edit'),
-                  ),
+            : null,
+        title: Text(task.title),
+        trailing: PopupMenuButton(
+          position: PopupMenuPosition.under,
+          itemBuilder: (context) {
+            return [
+              if (listType == ListType.tasksDoneList)
                 PopupMenuItem(
                   onTap: () {
-                    if (widget.listType == ListType.tasksList) {
-                      provider.deleteFromList(
-                          thisTask: widget.task, fromThisList: 'tasks');
-                    }
-                    else if (widget.listType == ListType.tasksDoneList) {
-                      provider.deleteFromList(
-                          thisTask: widget.task, fromThisList: 'tasksDone');
-                    }
-                    showSnackBar(context, content: 'Task deleted !');
+                    Future.delayed(const Duration(milliseconds: 800), () {
+                      provider.toggleDone(task);
+                    });
+                    showSnackBar(context,
+                        content:
+                            'Task marked as undone and added to the last of tasks to do list');
                   },
-                  child: const Text('Delete'),
+                  child: const Text('Mark as undone'),
                 ),
-              ];
-            },
-          )),
+              if (listType == ListType.tasksList)
+                PopupMenuItem(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return TaskDialog(
+                              task: task, editMode: EditMode.editTask);
+                        });
+                  },
+                  child: const Text('Edit'),
+                ),
+              PopupMenuItem(
+                onTap: () async{
+                  showSnackBar(context, content: 'Task deleted !');
+                  if (listType == ListType.tasksList) {
+                  await Future.delayed(const Duration(milliseconds: 800),()=>provider.deleteFromList(
+                      thisTask: task, fromThisList: 'tasks'));
+                  }
+                  else if (listType == ListType.tasksDoneList) {
+                    await Future.delayed(const Duration(milliseconds: 800),()=>provider.deleteFromList(
+                        thisTask: task, fromThisList: 'tasksDone'));
+                  }
+                },
+                child: const Text('Delete'),
+              ),
+            ];
+          },
+        ),
+      ),
     );
   }
 }

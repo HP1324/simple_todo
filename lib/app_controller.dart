@@ -20,6 +20,8 @@ class _ProviderState extends State<Provider> {
     setState(() {
       tasks = data;
       tasksDone = dataDone;
+      print(data);
+      print(dataDone);
     });
   }
 
@@ -40,16 +42,23 @@ class _ProviderState extends State<Provider> {
   }
 
   ///Checkbox state management
- void toggleChecked(Task task, bool? newValue) {
+
+  void toggleChecked(Task task, bool? newValue) {
+    ///All this headache is just for showing the checkbox being checked in the UI, there is no purpose of writing all this except this.
     setState(() {
-      task.isDone = newValue!;
+      List<Map<String, dynamic>> updatedTasks = List.from(tasks);
+      int index = tasks.indexWhere((t)=>Task.fromJson(t).id == task.id);
+      if(index != -1){
+        updatedTasks[index] = {
+          'id': updatedTasks[index]['id'], // Preserve the id
+          'title': updatedTasks[index]['title'], // Preserve the title
+          'isDone': newValue! ? 1 : 0, // Update isDone
+        };
+      }
+      tasks = updatedTasks;
     });
-    task.isDone = !task.isDone;
   }
-  // Icon icon = Icon(Icons.check_box_outline_blank);
-  // void toggleCheckIcon(Task task){ setState(() {
-  //   if(task.isDone)
-  // });}
+
   ///This part is managing the [NavigationBar]'s selected destination state
 
   var selectedDestination = 0;
@@ -74,16 +83,16 @@ class _ProviderState extends State<Provider> {
   Future<void> deleteFromList(
       {required Task thisTask, required String fromThisList}) async {
     await DatabaseService.deleteTask(
-        title: thisTask.title, tableName: fromThisList);
+        id: thisTask.id!, tableName: fromThisList);
     _refreshData();
   }
 
   ///Returns true if [task] is successfully edited.
   Future<bool> editTask(
-      {required String oldTitle, required String newTitle}) async {
-    var trimmed = oldTitle.trim();
+      {required Task task, required String newTitle}) async {
+    var trimmed = task.title.trim();
     if (trimmed.isNotEmpty) {
-      await DatabaseService.editTask(trimmed, newTitle, false);
+      await DatabaseService.editTask(task, newTitle, false);
       _refreshData();
       return true;
     }
@@ -93,8 +102,7 @@ class _ProviderState extends State<Provider> {
   Future<void> toggleDone(Task task) async {
     if (!task.isDone) {
       await DatabaseService.toggleDone(task, 'tasks');
-    }
-    else if (task.isDone) {
+    } else if (task.isDone) {
       await DatabaseService.toggleDone(task, 'tasksDone');
     }
     _refreshData();
@@ -108,8 +116,8 @@ class _ProviderState extends State<Provider> {
       tasks: tasks,
       tasksDone: tasksDone,
       themeData: themeData,
-      stateWidget: this,
       selectedNavigation: selectedDestination,
+      stateWidget: this,
       child: widget.child,
     );
   }
@@ -139,7 +147,6 @@ class AppController extends InheritedWidget {
     var stateManager = context
         .dependOnInheritedWidgetOfExactType<AppController>()!
         .stateWidget;
-
     return stateManager;
   }
 }

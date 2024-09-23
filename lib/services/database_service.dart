@@ -4,13 +4,15 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static Future<void> createTables(Database database) async {
-    await database.execute("""CREATE TABLE if not exists tasks (
-      title text,
-      isDone int
+    await database.execute("""CREATE TABLE IF NOT EXISTS tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      isDone INTEGER
       )""");
-    await database.execute("""CREATE TABLE if not exists tasksDone (
-      title text,
-      isDone int
+    await database.execute("""CREATE TABLE IF NOT EXISTS tasksDone (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      title TEXT NOT NULL DEFAULT '',
+      isDone INTEGER
     )""");
   }
 
@@ -35,17 +37,15 @@ class DatabaseService {
     try {
       if (tableName == 'tasks') {
         database.transaction((txn) async {
-          await txn
-              .delete('tasks', where: 'title = ?', whereArgs: [task.title]);
-
+          await txn.delete('tasks', where: 'id = ?', whereArgs: [task.id]);
           ///Managing isDone status to 1 or 0 in database, not in the controller or the view
-          await txn.insert('tasksDone', {'title': task.title, 'isDone': 1});
+          await txn.insert('tasksDone', {'title': task.title,'isDone': 1});
         });
       }
       if (tableName == 'tasksDone') {
         database.transaction((txn) async {
           await txn
-              .delete('tasksDone', where: 'title = ?', whereArgs: [task.title]);
+              .delete('tasksDone', where: 'id = ?', whereArgs: [task.id]);
 
           ///Managing isDone status to 1 or 0 in database, not in the controller or the view
           await txn.insert('tasks', {'title': task.title, 'isDone': 0});
@@ -67,19 +67,19 @@ class DatabaseService {
   }
 
   static Future<int> editTask(
-      String oldTitle, String newTitle, bool? isDone) async {
+      Task task, String newTitle, bool? isDone) async {
     final database = await DatabaseService.openDb();
     final data = {'title': newTitle, 'isDone': isDone == true ? 1 : 0};
     final result = await database
-        .update('tasks', data, where: 'title = ?', whereArgs: [oldTitle]);
+        .update('tasks', data, where: 'id = ?', whereArgs: [task.id]);
     return result;
   }
 
   static Future<void> deleteTask(
-      {required String title, required String tableName}) async {
+      {required int id, required String tableName}) async {
     final database = await DatabaseService.openDb();
     try {
-      await database.delete(tableName, where: 'title = ?', whereArgs: [title]);
+      await database.delete(tableName, where: 'id = ?', whereArgs: [id]);
     } catch (exception) {
       debugPrint('Something went wrong when deleting the task: $exception');
     }
