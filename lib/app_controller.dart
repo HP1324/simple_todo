@@ -7,10 +7,10 @@ class Provider extends StatefulWidget {
   const Provider({super.key, required this.child});
   final Widget child;
   @override
-  State<Provider> createState() => _ProviderState();
+  State<Provider> createState() => StateProvider();
 }
 
-class _ProviderState extends State<Provider> {
+class StateProvider extends State<Provider> {
   ///Database control is over here
   List<Map<String, dynamic>> tasks = [];
   List<Map<String, dynamic>> tasksDone = [];
@@ -135,13 +135,13 @@ class AppController extends InheritedWidget {
   final List<Map<String, dynamic>> tasksDone;
   final ThemeData themeData;
   final int selectedNavigation;
-  final _ProviderState stateWidget;
+  final StateProvider stateWidget;
   @override
   bool updateShouldNotify(AppController oldWidget) {
     return true;
   }
 
-  static _ProviderState of(BuildContext context) {
+  static StateProvider of(BuildContext context) {
     var stateManager = context
         .dependOnInheritedWidgetOfExactType<AppController>()!
         .stateWidget;
