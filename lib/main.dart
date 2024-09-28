@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:planner/app_controller.dart';
-import 'package:planner/widgets/task_dialog.dart';
-import 'package:planner/widgets/tasks_done_list.dart';
+import 'package:planner/widgets/task_editor_page.dart';
 import 'package:planner/widgets/tasks_list.dart';
 import 'package:planner/globals.dart';
 
@@ -17,7 +17,7 @@ class SimpleTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
-    return MaterialApp(
+    return GetMaterialApp(
       theme: provider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'MinimalTodo',
@@ -34,14 +34,17 @@ class Home extends StatelessWidget {
     var provider = AppController.of(context);
     return Scaffold(
       appBar: buildAppBar(context),
-      body: [const TasksList(), const TasksDoneList()][provider.selectedDestination],
-      floatingActionButton: buildFloatingActionButton(context),
+      body: [
+        const TasksList(),
+        const Text('Text'),
+      ][provider.selectedDestination],
+      floatingActionButton: buildFloatingActionButton(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: provider.selectedDestination,
-        height: 70,
+        height: MediaQuery.sizeOf(context).height * 0.0972,
         destinations: const [
           NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
-          NavigationDestination(icon: Icon(Icons.done_all), label: 'Done'),
+          NavigationDestination(icon: Icon(Iconsax.setting), label: 'Settings'),
         ],
         onDestinationSelected: (selected) =>
             provider.onDestinationSelected(selected),
@@ -49,40 +52,43 @@ class Home extends StatelessWidget {
     );
   }
 
-  FloatingActionButton buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const TaskDialog(
-                editMode: EditMode.newTask,
-              );
-            });
-      },
-      tooltip: 'Add Task',
-      elevation: 6,
-      shape: const CircleBorder(),
-      // backgroundColor: Colors,
-      child: const Icon(
-        Icons.add,
+  Widget buildFloatingActionButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom:40.0),
+      child: FloatingActionButton(
+        onPressed: () {
+          Get.to(()=>TaskEditorPage(editMode: EditMode.newTask),transition: Transition.rightToLeft,);
+        },
+        tooltip: 'Add Task',
+        elevation: 6,
+        shape: const CircleBorder(),
+        // backgroundColor: Colors,
+        child: const Icon(
+          Icons.add,
+          color: Color(0xffffffff),
+        ),
       ),
     );
   }
 
   AppBar buildAppBar(BuildContext context) {
+     var provider = AppController.of(context) ;
     return AppBar(
-      toolbarHeight: 70,
+      toolbarHeight: MediaQuery.sizeOf(context).height * 0.097222,
       elevation: 5,
       title: const Text(
         'Planner',
       ),
       actions: [
-        IconButton(
-            onPressed: () {
-              AppController.of(context).toggleTheme();
-            },
-            icon: const Icon(Icons.light_mode))
+        Switch(
+          value: provider.isDark,
+          onChanged: (newValue) {
+            provider.toggleTheme(newValue);
+          },
+          activeColor: Color(0x414141),
+          thumbIcon: provider.icon,
+
+        ),
       ],
     );
   }
