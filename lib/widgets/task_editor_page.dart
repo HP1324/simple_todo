@@ -204,8 +204,11 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                         }
                       }
                       if (widget.editMode == EditMode.editTask) {
-                        widget.task!.title = provider.titleController.text;
-                        widget.task!.category = categoryController.text;
+                        selectedCategory = categoryController.text;
+                        if(provider.titleController.text.isNotEmpty) {
+                          widget.task!.title = provider.titleController.text;
+                        }
+                        widget.task!.category = selectedCategory;
                         if (await provider.editTask(
                           task: widget.task!,
                         )) {

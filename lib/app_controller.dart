@@ -117,8 +117,6 @@ class StateProvider extends State<Provider> {
   Future<void> toggleDone(Task task) async {
     await DatabaseService.toggleDone(task);
     _refreshData();
-
-    ///Using only if here was a silly mistake, because task.isDone is set to true in the first if, so the second if will also run even if we don't want to do that. To solve that I have to use else if, instead of just if, to ensure only one of the blocks run
   }
 
   @override
