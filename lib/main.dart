@@ -32,32 +32,37 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: [
-        const TasksList(),
-        const Text('Text'),
-      ][provider.selectedDestination],
-      floatingActionButton: buildFloatingActionButton(),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: provider.selectedDestination,
-        height: MediaQuery.sizeOf(context).height * 0.0972,
-        destinations: const [
-          NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
-          NavigationDestination(icon: Icon(Iconsax.setting), label: 'Settings'),
-        ],
-        onDestinationSelected: (selected) =>
-            provider.onDestinationSelected(selected),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: buildAppBar(context),
+        body: [
+          const TasksList(),
+          const Text('Text'),
+        ][provider.selectedDestination],
+        floatingActionButton: buildFloatingActionButton(),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: provider.selectedDestination,
+          height: MediaQuery.sizeOf(context).height * 0.0972,
+          destinations: const [
+            NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
+            NavigationDestination(icon: Icon(Iconsax.setting), label: 'Settings'),
+          ],
+          onDestinationSelected: (selected) =>
+              provider.onDestinationSelected(selected),
+        ),
       ),
     );
   }
 
   Widget buildFloatingActionButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom:40.0),
+      padding: const EdgeInsets.only(bottom: 40.0),
       child: FloatingActionButton(
         onPressed: () {
-          Get.to(()=>TaskEditorPage(editMode: EditMode.newTask),transition: Transition.rightToLeft,);
+          Get.to( TaskEditorPage(editMode: EditMode.newTask),
+            transition: Transition.upToDown,
+          );
         },
         tooltip: 'Add Task',
         elevation: 6,
@@ -72,22 +77,18 @@ class Home extends StatelessWidget {
   }
 
   AppBar buildAppBar(BuildContext context) {
-     var provider = AppController.of(context) ;
+    var provider = AppController.of(context);
     return AppBar(
-      toolbarHeight: MediaQuery.sizeOf(context).height * 0.097222,
-      elevation: 5,
-      title: const Text(
-        'Planner',
-      ),
+      toolbarHeight: MediaQuery.sizeOf(context).height * 0.05,
+      title: const Text('Planner'),
       actions: [
         Switch(
           value: provider.isDark,
+          activeColor: Color(0x414141),
+          thumbIcon: provider.icon,
           onChanged: (newValue) {
             provider.toggleTheme(newValue);
           },
-          activeColor: Color(0x414141),
-          thumbIcon: provider.icon,
-
         ),
       ],
     );

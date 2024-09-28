@@ -4,6 +4,7 @@ import 'package:planner/app_controller.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:get/get.dart';
 
 class TaskEditorPage extends StatefulWidget {
   const TaskEditorPage({super.key, this.task, required this.editMode});
@@ -187,7 +188,6 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                       borderRadius: BorderRadius.circular(7)),
                   child: InkWell(
                     onTap: () async {
-                      final navigator = Navigator.of(context);
                       if(!provider.categories.contains(categoryController.text) && categoryController.text.isNotEmpty){
                         provider.categories.add(categoryController.text);
                       }
@@ -198,7 +198,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                             category: selectedCategory,
                             isDone: false);
                         if (await provider.addTask(task)) {
-                          navigator.pop();
+                          Get.back();
                           showSnackBar(context, content: 'Task added');
                           provider.titleController.clear();
                         }
@@ -209,7 +209,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                         if (await provider.editTask(
                           task: widget.task!,
                         )) {
-                          navigator.pop();
+                          Get.back();
                           showSnackBar(context, content: 'Task edited');
                           provider.titleController.clear();
                         }

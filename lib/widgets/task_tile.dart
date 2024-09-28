@@ -34,8 +34,7 @@ class TaskTile extends StatelessWidget {
             return [
               PopupMenuItem(
                 onTap: () {
-                  Get.to(() =>
-                      TaskEditorPage(task: task, editMode: EditMode.editTask));
+                  Get.to(TaskEditorPage(task: task, editMode: EditMode.editTask),transition: Transition.downToUp);
                 },
                 child: Text(
                   'Edit',
