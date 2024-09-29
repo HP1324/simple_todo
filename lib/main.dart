@@ -60,7 +60,7 @@ class Home extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 40.0),
       child: FloatingActionButton(
         onPressed: () {
-          Get.to( TaskEditorPage(editMode: EditMode.newTask),
+          Get.to( const TaskEditorPage(editMode: EditMode.newTask),
             transition: Transition.upToDown,
           );
         },
@@ -84,7 +84,7 @@ class Home extends StatelessWidget {
       actions: [
         Switch(
           value: provider.isDark,
-          activeColor: Color(0x414141),
+          activeColor: const Color(0x00414141),
           thumbIcon: provider.icon,
           onChanged: (newValue) {
             provider.toggleTheme(newValue);

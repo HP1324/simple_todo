@@ -21,7 +21,7 @@ class TaskTile extends StatelessWidget {
         leading: Checkbox(
           value: task.isDone,
           onChanged: (newValue) async {
-            showSnackBar(context,
+            showSnackBar(
                 content:
                     task.isDone ? 'Task marked undone' : 'Task marked as done');
             provider.toggleChecked(task, newValue);
@@ -36,14 +36,14 @@ class TaskTile extends StatelessWidget {
                 onTap: () {
                   Get.to(TaskEditorPage(task: task, editMode: EditMode.editTask),transition: Transition.downToUp);
                 },
-                child: Text(
+                child: const Text(
                   'Edit',
                   style: AppTheme.popupItemStyle,
                 ),
               ),
               PopupMenuItem(
                 onTap: () async {
-                  showSnackBar(context, content: 'Task deleted !');
+                  showSnackBar( content: 'Task deleted !');
                   await Future.delayed(const Duration(milliseconds: 300),
                       () => provider.deleteFromList(taskToDelete: task));
                 },

@@ -36,11 +36,11 @@ class AppTheme {
       indicatorColor: tealShade100,
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return IconThemeData(color: darkTeal);
+          return const IconThemeData(color: darkTeal);
         }
-        return IconThemeData(color: Color(0xffffffff));
+        return const IconThemeData(color: Color(0xffffffff));
       }),
-      labelTextStyle: WidgetStatePropertyAll(
+      labelTextStyle: const WidgetStatePropertyAll(
         TextStyle(
           color: Colors.white,
           fontSize: 14,
@@ -48,23 +48,23 @@ class AppTheme {
         ),
       ),
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: tealShade500,
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: const DialogTheme(
       backgroundColor: tealShade50,
       titleTextStyle: TextStyle(color: darkTeal,fontWeight: FontWeight.bold,fontSize: 21),
     ),
-    cardTheme: CardTheme(
+    cardTheme: const CardTheme(
       color: cardTeal,
     ),
-    popupMenuTheme: PopupMenuThemeData(
+    popupMenuTheme: const PopupMenuThemeData(
       iconColor: darkTeal,
       color: tealShade50,
       position: PopupMenuPosition.under,
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: WidgetStatePropertyAll(tealShade100),
+      checkColor: const WidgetStatePropertyAll(tealShade100),
       fillColor: WidgetStateProperty.resolveWith(
           (states){
             if(states.contains(WidgetState.selected)){
@@ -73,10 +73,10 @@ class AppTheme {
           }
       ),
     ),
-    listTileTheme: ListTileThemeData(
+    listTileTheme: const ListTileThemeData(
       titleTextStyle: TextStyle(fontWeight: FontWeight.w500,fontSize : 15,color: Color(0xff000000))
     ),
-    dropdownMenuTheme: DropdownMenuThemeData(
+    dropdownMenuTheme: const DropdownMenuThemeData(
       menuStyle: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(tealShade50),
       )
@@ -89,7 +89,7 @@ class AppTheme {
         brightness: Brightness.dark,
       ),
       scaffoldBackgroundColor: const Color(0xff414141),
-    listTileTheme: ListTileThemeData(
+    listTileTheme: const ListTileThemeData(
         titleTextStyle: TextStyle(color: Colors.white)
     ),
   );

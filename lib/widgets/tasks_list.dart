@@ -14,16 +14,15 @@ class TasksList extends StatelessWidget {
     var provider = AppController.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(provider.isNewTaskAdded) {
-        provider.scrollController
-            .jumpTo(provider.scrollController.position.maxScrollExtent);
+        provider.scrollController.jumpTo(provider.scrollController.position.maxScrollExtent);
         provider.isNewTaskAdded = false;
       }
     });
-    var tasks = AppController.of(context).tasks;
+    var tasks = provider.tasks;
     return Column(
       children: [
-        if (tasks.isEmpty) Spacer(),
-        if (tasks.isEmpty) EmptyListPlaceholder(),
+        if (tasks.isEmpty) const Spacer(),
+        if (tasks.isEmpty) const EmptyListPlaceholder(),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(bottom: 40.0),
@@ -43,7 +42,7 @@ class TasksList extends StatelessWidget {
           textInputAction: TextInputAction.done,
           autofocus: false,
           cursorColor: AppTheme.darkTeal,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
             filled: true,
             fillColor: AppTheme.cardTeal,
@@ -51,14 +50,13 @@ class TasksList extends StatelessWidget {
             hintStyle: TextStyle(color: AppTheme.darkTeal, fontSize: 16),
             border: InputBorder.none,
           ),
-          onSubmitted: (value) {
-            if (value.trim().isNotEmpty) {
+          onSubmitted: (value)async {
               Task task = Task(title: value);
-              provider.addTask(task);
-              showSnackBar(context, content: 'Task added');
+            if (await provider.addTask(task)) {
+              showSnackBar( content: 'Task added');
               provider.titleController.clear();
             } else {
-              showSnackBar(context, content: 'Add task at first');
+              showSnackBar( content: 'Write something first');
               provider.titleController.clear();
             }
           },

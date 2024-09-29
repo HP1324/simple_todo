@@ -40,7 +40,7 @@ class StateProvider extends State<Provider> {
   ThemeData themeData = AppTheme.lightMode;
   // Icon icon = Icon(Icons.dark_mode);
   WidgetStateProperty<Icon> icon =
-      WidgetStatePropertyAll(Icon(Icons.dark_mode));
+      const WidgetStatePropertyAll(Icon(Icons.dark_mode));
   bool isDark = false;
 
   ///The state of app theme is managed through this function
@@ -49,10 +49,10 @@ class StateProvider extends State<Provider> {
       isDark = newValue;
       if (themeData == AppTheme.lightMode) {
         themeData = AppTheme.darkMode;
-        icon = WidgetStatePropertyAll(Icon(Icons.light_mode));
+        icon = const WidgetStatePropertyAll(Icon(Icons.light_mode));
       } else {
         themeData = AppTheme.lightMode;
-        icon = WidgetStatePropertyAll(Icon(Icons.dark_mode));
+        icon = const WidgetStatePropertyAll(Icon(Icons.dark_mode));
       }
     });
   }

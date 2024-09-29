@@ -63,19 +63,19 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                   maxLines: null,
                   decoration: InputDecoration(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
                     filled: true,
                     fillColor: AppTheme.cardTeal,
                     hintText: widget.editMode == EditMode.newTask
                         ? 'What’s on your to-do list?'
                         : 'What needs changing?',
                     hintStyle:
-                        TextStyle(color: AppTheme.darkTeal, fontSize: 16),
+                        const TextStyle(color: AppTheme.darkTeal, fontSize: 16),
                     border: InputBorder.none,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Select a category',
                   style: TextStyle(
                       color: AppTheme.darkTeal,
@@ -100,7 +100,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                             setState(() {
                               selectedCategory = value!;
                             });
-                            print(selectedCategory);
+                            debugPrint(selectedCategory);
                           },
                         ),
                         secondChild: TextField(
@@ -142,7 +142,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
 
                             ///Had to use future.delayed because it was trying to get focus before the [TextField] ///exists. That is because [TextField] comes after clicking on the button, and before it ///comes, the requestFocus is run and it can't find TextField, this error was thrown: ///FocusNode#ce5d6(context: Focus, NOT FOCUSABLE), this happens in microseconds,so even ///delaying the requestFocus by 1 milliseconds, it works perfect, because textfield is ///getting built in less than a millisecond.
                             Future.delayed(
-                                Duration(milliseconds: 100),
+                                const Duration(milliseconds: 100),
                                 () =>
                                     categoryTextFieldFocusNode.requestFocus());
                           } else {
@@ -160,7 +160,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   height: MediaQuery.sizeOf(context).height * 0.065,
                   width: double.infinity,
@@ -170,7 +170,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                   ),
                   child: InkWell(
                     onTap: () {},
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Add reminder',
                         style: TextStyle(
@@ -179,7 +179,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   height: MediaQuery.sizeOf(context).height * 0.065,
                   width: double.infinity,
@@ -199,7 +199,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                             isDone: false);
                         if (await provider.addTask(task)) {
                           Get.back();
-                          showSnackBar(context, content: 'Task added');
+                          Get.showSnackbar(const GetSnackBar(message: 'Task added',));
                           provider.titleController.clear();
                         }
                       }
@@ -213,12 +213,12 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                           task: widget.task!,
                         )) {
                           Get.back();
-                          showSnackBar(context, content: 'Task edited');
+                          showSnackBar( content: 'Task edited');
                           provider.titleController.clear();
                         }
                       }
                     },
-                    child: Center(
+                    child:const Center(
                       child: Text(
                         'Save',
                         style: TextStyle(
