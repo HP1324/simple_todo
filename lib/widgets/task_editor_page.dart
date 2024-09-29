@@ -140,7 +140,7 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
                             isDropDown = false;
                             titleTextFieldFocusNode.unfocus();
 
-                            ///Had to use future.delayed because it was trying to get focus before the [TextField] exists. That is because [TextField] comes after clicking on the button, and before it comes, the requestFocus is run and it can't find TextField, this error was thrown: FocusNode#ce5d6(context: Focus, NOT FOCUSABLE), this happens in microseconds,so even delaying the requestFocus by 1 milliseconds, it works perfect, because textfield is getting built in less than a millisecond.
+                            ///Had to use future.delayed because it was trying to get focus before the [TextField] ///exists. That is because [TextField] comes after clicking on the button, and before it ///comes, the requestFocus is run and it can't find TextField, this error was thrown: ///FocusNode#ce5d6(context: Focus, NOT FOCUSABLE), this happens in microseconds,so even ///delaying the requestFocus by 1 milliseconds, it works perfect, because textfield is ///getting built in less than a millisecond.
                             Future.delayed(
                                 Duration(milliseconds: 100),
                                 () =>
