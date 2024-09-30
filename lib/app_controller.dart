@@ -60,12 +60,7 @@ class StateProvider extends State<Provider> {
   ///Checkbox state management
 
   void toggleChecked(Task task, bool? newValue) {
-    debugPrint(
-        '------------------------Inside provider.toggleChecked()---------------------------');
-    debugPrint('newValue currently is: $newValue');
     setState(() => task.isDone = newValue!);
-    debugPrint(
-        '------------------------End of provider.toggleChecked()---------------------------');
   }
 
   ///This part is managing the [NavigationBar]'s selected destination state
@@ -126,7 +121,7 @@ class StateProvider extends State<Provider> {
       themeData: themeData,
       icon: icon,
       isDark: isDark,
-      selectedNavigation: selectedDestination,
+      selectedDestination: selectedDestination,
       titleController: titleController,
       categories: categories,
       stateWidget: this,
@@ -144,7 +139,7 @@ class AppController extends InheritedWidget {
       required this.themeData,
       required this.icon,
       required this.isDark,
-      required this.selectedNavigation,
+      required this.selectedDestination,
       required this.titleController,
       required this.categories,
       required this.stateWidget});
@@ -154,7 +149,7 @@ class AppController extends InheritedWidget {
   final ThemeData themeData;
   final WidgetStateProperty<Icon> icon;
   final bool isDark;
-  final int selectedNavigation;
+  final int selectedDestination;
   final TextEditingController titleController;
   final List<String> categories;
   final StateProvider stateWidget;
@@ -163,11 +158,12 @@ class AppController extends InheritedWidget {
   bool updateShouldNotify(AppController oldWidget) {
     return tasks != oldWidget.tasks ||
         themeData != oldWidget.themeData ||
-        selectedNavigation != oldWidget.selectedNavigation ||
+        selectedDestination != oldWidget.selectedDestination ||
         titleController != oldWidget.titleController ||
         categories != oldWidget.categories ||
         stateWidget != oldWidget.stateWidget;
   }
+
 
   static StateProvider of(BuildContext context) {
     var stateManager = context

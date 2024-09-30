@@ -3,6 +3,7 @@ import 'package:planner/app_controller.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/widgets/planner_text_field.dart';
 import 'package:planner/widgets/empty_list_placeholder.dart';
 import 'package:planner/widgets/task_tile.dart';
 
@@ -37,19 +38,11 @@ class TasksList extends StatelessWidget {
             ),
           ),
         ),
-        TextField(
+        PlannerTextField(
           controller: provider.titleController,
-          textInputAction: TextInputAction.done,
-          autofocus: false,
-          cursorColor: AppTheme.darkTeal,
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-            filled: true,
-            fillColor: AppTheme.cardTeal,
-            hintText: 'Tap here to add task on the go',
-            hintStyle: TextStyle(color: AppTheme.darkTeal, fontSize: 16),
-            border: InputBorder.none,
-          ),
+          isMaxLinesNull: false,
+          isAutoFocus: false,
+          hintText: 'Tap here to add task on the go',
           onSubmitted: (value)async {
               Task task = Task(title: value);
             if (await provider.addTask(task)) {
