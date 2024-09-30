@@ -79,8 +79,7 @@ class StateProvider extends State<Provider> {
   var titleController = TextEditingController();
   List<String> categories = ['Home', 'Work', 'Personal', 'Family'];
 
-  ///The rest of the functions are managing the state of [TasksList] and [TasksDone] list.
-  ///
+
   ///Returns true if [task] is successfully added.
   Future<bool> addTask(Task task) async {
     task.title = task.title.trim();
@@ -93,7 +92,7 @@ class StateProvider extends State<Provider> {
     return false;
   }
 
-  ///Delete  [thisTask] [fromThislist]
+  ///Delete task from database
   Future<void> deleteFromList({required Task taskToDelete}) async {
     await DatabaseService.deleteTask(id: taskToDelete.id!);
     _refreshData();

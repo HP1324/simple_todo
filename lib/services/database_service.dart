@@ -28,7 +28,6 @@ class DatabaseService {
   }
 
   static Future<void> toggleDone(Task task,) async {
-    ///To maintain atomicity, which means when dealing with multiple transactions, all transactions must be completed or none should be completed. In our case, there are two transactions, one is to delete it from the previous list and the other is inserting the data to another list. [list == table]
     debugPrint('--------------------Inside DatabaseService.toggleDone()------------------');
     debugPrint('task parameter value : ${task.toJson()}');
     final database = await DatabaseService.openDb();
