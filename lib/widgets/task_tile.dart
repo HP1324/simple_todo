@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:planner/app_controller.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/task_editor_page.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class TaskTile extends StatelessWidget {
   const TaskTile({super.key, required this.task});
@@ -12,7 +12,7 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = AppController.of(context);
+    var readProvider = context.watch<TaskProvider>();
     return Card(
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -21,11 +21,12 @@ class TaskTile extends StatelessWidget {
         leading: Checkbox(
           value: task.isDone,
           onChanged: (newValue) async {
-            showSnackBar(
+            var scaffoldMessenger = ScaffoldMessenger.of(context);
+            showSnackBar(scaffoldMessenger,
                 content:
                     task.isDone ? 'Task marked undone' : 'Task marked as done');
-            provider.toggleChecked(task, newValue);
-            await provider.toggleDone(task);
+            readProvider.toggleChecked(task, newValue);
+            await readProvider.toggleDone(task);
           },
         ),
         title: Text(task.title),
@@ -34,7 +35,12 @@ class TaskTile extends StatelessWidget {
             return [
               PopupMenuItem(
                 onTap: () {
-                  Get.to(TaskEditorPage(task: task, editMode: EditMode.editTask),transition: Transition.downToUp);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => TaskEditorPage(
+                                editMode: true,
+                              )));
                 },
                 child: const Text(
                   'Edit',
@@ -43,9 +49,10 @@ class TaskTile extends StatelessWidget {
               ),
               PopupMenuItem(
                 onTap: () async {
-                  showSnackBar( content: 'Task deleted !');
+                  var scaffoldMessenger = ScaffoldMessenger.of(context);
+                  showSnackBar(scaffoldMessenger, content: 'Task deleted !');
                   await Future.delayed(const Duration(milliseconds: 300),
-                      () => provider.deleteFromList(taskToDelete: task));
+                      () => readProvider.deleteTask(taskToDelete: task));
                 },
                 child: const Text('Delete', style: AppTheme.popupItemStyle),
               ),

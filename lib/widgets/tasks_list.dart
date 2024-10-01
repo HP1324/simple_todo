@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:planner/app_controller.dart';
-import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
+import 'package:planner/main.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/planner_text_field.dart';
 import 'package:planner/widgets/empty_list_placeholder.dart';
 import 'package:planner/widgets/task_tile.dart';
-
+import 'package:provider/provider.dart';
+//ignore: must_be_immutable
 class TasksList extends StatelessWidget {
-  const TasksList({super.key});
-
+  TasksList({super.key});
+  var titleController = TextEditingController();
+  var scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    var provider = AppController.of(context);
+    var watchProvider = context.watch<TaskProvider>();
+    var readProvider = context.read<TaskProvider>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(provider.isNewTaskAdded) {
-        provider.scrollController.jumpTo(provider.scrollController.position.maxScrollExtent);
-        provider.isNewTaskAdded = false;
+      if(watchProvider.isNewTaskAdded) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        watchProvider.isNewTaskAdded = false;
       }
     });
-    var tasks = provider.tasks;
+    var tasks = watchProvider.tasks;
     return Column(
       children: [
         if (tasks.isEmpty) const Spacer(),
@@ -33,24 +37,25 @@ class TasksList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return TaskTile(task: Task.fromJson(tasks[index]));
                 },
-                controller: provider.scrollController,
+                controller: scrollController,
               ),
             ),
           ),
         ),
         PlannerTextField(
-          controller: provider.titleController,
+          controller: titleController,
           isMaxLinesNull: false,
           isAutoFocus: false,
           hintText: 'Tap here to add task on the go',
           onSubmitted: (value)async {
+              var scaffoldMessenger = ScaffoldMessenger.of(context);
               Task task = Task(title: value);
-            if (await provider.addTask(task)) {
-              showSnackBar( content: 'Task added');
-              provider.titleController.clear();
+            if (await readProvider.addTask(task)) {
+              showSnackBar(scaffoldMessenger, content: 'Task added');
+              titleController.clear();
             } else {
-              showSnackBar( content: 'Write something first');
-              provider.titleController.clear();
+              showSnackBar(scaffoldMessenger, content: 'Write something first');
+              titleController.clear();
             }
           },
         ),

@@ -7,9 +7,15 @@ class DatabaseService {
     await database.execute("""CREATE TABLE tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT,
-      category TEXT,
-      isDone INTEGER
+      categoryId INTEGER,
+      isDone INTEGER DEFAULT 0,
+      FOREIGN KEY(categoryId) REFERENCES categories (id)
       )""");
+    await database.execute(""" CREATE TABLE categories(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category TEXT UNIQUE
+     """);
+    await database.execute("""INSERT INTO categories VALUES('Self improvement'),('Family'),('Work')""");
   }
 
   static Future<Database> openDb() async {
@@ -17,51 +23,5 @@ class DatabaseService {
         onCreate: (database, version) async {
       await createTables(database);
     });
-  }
-
-  static Future<int> addTask(Task task) async {
-    final database = await DatabaseService.openDb();
-    final data = task.toJson();
-    final id = await database.insert('tasks', data,
-        conflictAlgorithm: ConflictAlgorithm.replace);
-    return id;
-  }
-
-  static Future<void> toggleDone(Task task,) async {
-    debugPrint('--------------------Inside DatabaseService.toggleDone()------------------');
-    debugPrint('task parameter value : ${task.toJson()}');
-    final database = await DatabaseService.openDb();
-    int isDone = task.isDone ? 1 : 0;
-    try {
-      await database.update('tasks',{'isDone':isDone},where: 'id = ?', whereArgs: [task.id]);
-    }catch(exception){
-      debugPrint('something went wrong when marking taskAsDone: $exception');
-    }
-
-    debugPrint('--------------------End of DatabaseService.toggleDone()------------------');
-  }
-
-  static Future<List<Map<String, dynamic>>> getTasks() async {
-    final database = await DatabaseService.openDb();
-    return await database.query('tasks');
-  }
-
-  static Future<int> editTask(
-      Task task) async {
-    final database = await DatabaseService.openDb();
-    final data = task.toJson();
-    final result = await database
-        .update('tasks', data, where: 'id = ?', whereArgs: [task.id]);
-    return result;
-  }
-
-  static Future<void> deleteTask(
-      {required int id,}) async {
-    final database = await DatabaseService.openDb();
-    try {
-      await database.delete('tasks', where: 'id = ?', whereArgs: [id]);
-    } catch (exception) {
-      debugPrint('Something went wrong when deleting the task: $exception');
-    }
   }
 }

@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:planner/app_controller.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
+import 'package:planner/main.dart';
+import 'package:planner/models/category.dart';
 import 'package:planner/models/task.dart';
-import 'package:get/get.dart';
+import 'package:planner/providers/category_provider.dart';
 import 'package:planner/widgets/planner_text_field.dart';
+import 'package:provider/provider.dart';
+//ignore: must_be_immutable
+class TaskEditorPage extends StatelessWidget {
+  TaskEditorPage({super.key, this.task,this.editMode});
+  Task? task;
+   bool? editMode;
 
-class TaskEditorPage extends StatefulWidget {
-  const TaskEditorPage({super.key, this.task, required this.editMode});
-  final Task? task;
-  final EditMode editMode;
-
-  @override
-  State<TaskEditorPage> createState() => _TaskEditorPageState();
-}
-
-class _TaskEditorPageState extends State<TaskEditorPage> {
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
+    var categories = context.watch<CategoryProvider>().categories;
     return Scaffold(
         appBar: AppBar(
-          title: widget.editMode == EditMode.newTask
-              ? const Text('New Task')
-              : const Text('Edit Task'),
+          title: editMode!
+              ? const Text('Edit Task')
+              : const Text('New Task'),
           titleSpacing: 0,
         ),
         body: Padding(
@@ -31,6 +29,39 @@ class _TaskEditorPageState extends State<TaskEditorPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 10),
+                PlannerTextField(
+                  controller: provider.titleController,
+                  isMaxLinesNull: true,
+                  isAutoFocus: true,
+                  hintText: 'What\'s on your to-do list?',
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownMenu(
+                        hintText: 'Select a category',
+                        initialSelection: categories,
+                        width: MediaQuery.sizeOf(context).width * 0.85,
+                        dropdownMenuEntries: categories.map((e){
+                            var categoryObj = CategoryModel.fromJson(e);
+                            return DropdownMenuEntry(value: categoryObj, label: categoryObj.categoryName);
+                        }
+                        ).toList(),
+                      ),
+                    ),
+                    InkWell(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                      ),
+                      onTap:(){
+
+                      }
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 Container(
                   height: MediaQuery.sizeOf(context).height * 0.065,

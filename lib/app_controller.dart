@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:planner/app_theme.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/services/database_service.dart';
+import 'package:planner/services/task_service.dart';
 
-class Provider extends StatefulWidget {
-  const Provider({super.key, required this.child});
+class MyProvider extends StatefulWidget {
+  const MyProvider({super.key, required this.child});
   final Widget child;
   @override
-  State<Provider> createState() => StateProvider();
+  State<MyProvider> createState() => StateProvider();
 }
 
-class StateProvider extends State<Provider> {
+class StateProvider extends State<MyProvider> {
   bool isNewTaskAdded = false;
 
   ///Database control is over here
@@ -18,7 +18,7 @@ class StateProvider extends State<Provider> {
   void _refreshData() async {
     debugPrint(
         '********************inside refreshData()****************************');
-    final data = await DatabaseService.getTasks();
+    final data = await TaskService.getTasks();
     setState(() {
       tasks = data;
       debugPrint(tasks.toString());
@@ -36,26 +36,6 @@ class StateProvider extends State<Provider> {
   ///[TaskList] scroll controller
   ScrollController scrollController = ScrollController();
 
-  ///Theme state
-  ThemeData themeData = AppTheme.lightMode;
-  // Icon icon = Icon(Icons.dark_mode);
-  WidgetStateProperty<Icon> icon =
-      const WidgetStatePropertyAll(Icon(Icons.dark_mode));
-  bool isDark = false;
-
-  ///The state of app theme is managed through this function
-  void toggleTheme(bool newValue) {
-    setState(() {
-      isDark = newValue;
-      if (themeData == AppTheme.lightMode) {
-        themeData = AppTheme.darkMode;
-        icon = const WidgetStatePropertyAll(Icon(Icons.light_mode));
-      } else {
-        themeData = AppTheme.lightMode;
-        icon = const WidgetStatePropertyAll(Icon(Icons.dark_mode));
-      }
-    });
-  }
 
   ///Checkbox state management
 
@@ -79,7 +59,7 @@ class StateProvider extends State<Provider> {
   Future<bool> addTask(Task task) async {
     task.title = task.title.trim();
     if (task.title.isNotEmpty) {
-      await DatabaseService.addTask(task);
+      await TaskService.addTask(task);
       _refreshData();
       isNewTaskAdded = true;
       return true;
@@ -88,8 +68,8 @@ class StateProvider extends State<Provider> {
   }
 
   ///Delete task from database
-  Future<void> deleteFromList({required Task taskToDelete}) async {
-    await DatabaseService.deleteTask(id: taskToDelete.id!);
+  Future<void> deleteTask({required Task taskToDelete}) async {
+    await TaskService.deleteTask(id: taskToDelete.id!);
     _refreshData();
   }
 
@@ -101,7 +81,7 @@ class StateProvider extends State<Provider> {
 
     ///For some reason [trimmed.isEmpty] and [trimmed.isNotEmpty] were not working as expected and they were allowing to save an empty task, so I had to do this:
     if (trimmed.isNotEmpty) {
-      await DatabaseService.editTask(task);
+      await TaskService.editTask(task);
       _refreshData();
       return true;
     }
@@ -109,7 +89,7 @@ class StateProvider extends State<Provider> {
   }
 
   Future<void> toggleDone(Task task) async {
-    await DatabaseService.toggleDone(task);
+    await TaskService.toggleDone(task);
     _refreshData();
   }
 
@@ -118,9 +98,6 @@ class StateProvider extends State<Provider> {
     return AppController(
       tasks: tasks,
       scrollController: scrollController,
-      themeData: themeData,
-      icon: icon,
-      isDark: isDark,
       selectedDestination: selectedDestination,
       titleController: titleController,
       categories: categories,
@@ -136,9 +113,6 @@ class AppController extends InheritedWidget {
       required super.child,
       required this.tasks,
       required this.scrollController,
-      required this.themeData,
-      required this.icon,
-      required this.isDark,
       required this.selectedDestination,
       required this.titleController,
       required this.categories,
@@ -146,9 +120,6 @@ class AppController extends InheritedWidget {
 
   final List<Map<String, dynamic>> tasks;
   final ScrollController scrollController;
-  final ThemeData themeData;
-  final WidgetStateProperty<Icon> icon;
-  final bool isDark;
   final int selectedDestination;
   final TextEditingController titleController;
   final List<String> categories;
@@ -157,7 +128,6 @@ class AppController extends InheritedWidget {
   @override
   bool updateShouldNotify(AppController oldWidget) {
     return tasks != oldWidget.tasks ||
-        themeData != oldWidget.themeData ||
         selectedDestination != oldWidget.selectedDestination ||
         titleController != oldWidget.titleController ||
         categories != oldWidget.categories ||

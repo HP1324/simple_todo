@@ -15,82 +15,144 @@ class AppTheme {
   static const tealShade900 = Color(0xFF004D40); // #004D40
   static const cardTeal = Color(0xffC8E6E6);
 
-  static const popupItemStyle = TextStyle(color: darkTeal, fontWeight: FontWeight.bold);
+  static const popupItemStyle = TextStyle(
+      color: darkTeal, fontWeight: FontWeight.bold);
 
   static ThemeData lightMode = ThemeData(
-    fontFamily: GoogleFonts.gabarito().fontFamily,
-    brightness: Brightness.light,
-    appBarTheme: const AppBarTheme(
-      iconTheme: IconThemeData(color: tealShade50),
-      titleTextStyle: TextStyle(
-        fontSize: 25,
-        color: tealShade50
+      fontFamily: GoogleFonts
+          .gabarito()
+          .fontFamily,
+      brightness: Brightness.light,
+      appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: tealShade50),
+        titleTextStyle: TextStyle(
+            fontSize: 25,
+            color: tealShade50
+        ),
+        actionsIconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Color(0xff00796B),
       ),
-      actionsIconTheme: IconThemeData(color: Colors.white),
-      backgroundColor: Color(0xff00796B),
-    ),
-    scaffoldBackgroundColor: tealShade50,
-    navigationBarTheme: NavigationBarThemeData(
-      elevation: 5,
-      backgroundColor: darkTeal,
-      indicatorColor: tealShade100,
-      iconTheme: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return const IconThemeData(color: darkTeal);
-        }
-        return const IconThemeData(color: Color(0xffffffff));
-      }),
-      labelTextStyle: const WidgetStatePropertyAll(
-        TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+      scaffoldBackgroundColor: tealShade50,
+      navigationBarTheme: NavigationBarThemeData(
+        elevation: 5,
+        backgroundColor: darkTeal,
+        indicatorColor: tealShade100,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: darkTeal);
+          }
+          return const IconThemeData(color: Color(0xffffffff));
+        }),
+        labelTextStyle: const WidgetStatePropertyAll(
+          TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: tealShade500,
-    ),
-    dialogTheme: const DialogTheme(
-      backgroundColor: tealShade50,
-      titleTextStyle: TextStyle(color: darkTeal,fontWeight: FontWeight.bold,fontSize: 21),
-    ),
-    cardTheme: const CardTheme(
-      color: cardTeal,
-    ),
-    popupMenuTheme: const PopupMenuThemeData(
-      iconColor: darkTeal,
-      color: tealShade50,
-      position: PopupMenuPosition.under,
-    ),
-    checkboxTheme: CheckboxThemeData(
-      checkColor: const WidgetStatePropertyAll(tealShade100),
-      fillColor: WidgetStateProperty.resolveWith(
-          (states){
-            if(states.contains(WidgetState.selected)){
-              return darkTeal;
-            } return null;
-          }
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: tealShade500,
       ),
-    ),
-    listTileTheme: const ListTileThemeData(
-      titleTextStyle: TextStyle(fontWeight: FontWeight.w500,fontSize : 15,color: Color(0xff000000))
-    ),
-    dropdownMenuTheme: const DropdownMenuThemeData(
-      menuStyle: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(tealShade50),
+      dialogTheme: const DialogTheme(
+        backgroundColor: tealShade50,
+        titleTextStyle: TextStyle(
+            color: darkTeal, fontWeight: FontWeight.bold, fontSize: 21),
+      ),
+      cardTheme: const CardTheme(
+        color: cardTeal,
+      ),
+      popupMenuTheme: const PopupMenuThemeData(
+        iconColor: darkTeal,
+        color: tealShade50,
+        position: PopupMenuPosition.under,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: const WidgetStatePropertyAll(tealShade100),
+        fillColor: WidgetStateProperty.resolveWith(
+                (states) {
+              if (states.contains(WidgetState.selected)) {
+                return darkTeal;
+              }
+              return null;
+            }
+        ),
+      ),
+      listTileTheme: const ListTileThemeData(
+          titleTextStyle: TextStyle(fontWeight: FontWeight.w500,
+              fontSize: 15,
+              color: Color(0xff000000))
+      ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+          menuStyle: MenuStyle(
+            backgroundColor: WidgetStatePropertyAll(tealShade50),
+          )
       )
-    )
   );
 
   static ThemeData darkMode = ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xff49a0b6),
-        brightness: Brightness.dark,
+      fontFamily: GoogleFonts.gabarito().fontFamily,
+      brightness: Brightness.dark,
+      appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(
+            fontSize: 25,
+            color: Colors.white
+        ),
+        actionsIconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Color(0xff333333), // A dark gray color
       ),
-      scaffoldBackgroundColor: const Color(0xff414141),
-    listTileTheme: const ListTileThemeData(
-        titleTextStyle: TextStyle(color: Colors.white)
-    ),
+      scaffoldBackgroundColor: Color(0xff444444), // A slightly lighter dark gray color
+      navigationBarTheme: NavigationBarThemeData(
+        elevation: 5,
+        backgroundColor: Color(0xff333333),
+        indicatorColor: Colors.white,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: Colors.white);
+          }
+          return const IconThemeData(color: Colors.grey);
+        }),
+        labelTextStyle: const WidgetStatePropertyAll(
+          TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: Colors.grey,
+      ),
+      dialogTheme: const DialogTheme(
+        backgroundColor: Color(0xff333333),
+        titleTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
+      ),
+      cardTheme: const CardTheme(
+        color: Color(0xff444444),
+      ),
+      popupMenuTheme: const PopupMenuThemeData(
+        iconColor: Colors.white,
+        color: Color(0xff333333),
+        position: PopupMenuPosition.under,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: const WidgetStatePropertyAll(Colors.white),
+        fillColor: WidgetStateProperty.resolveWith(
+                (states){
+              if(states.contains(WidgetState.selected)){
+                return Colors.white;
+              } return null;
+            }
+        ),
+      ),
+      listTileTheme: const ListTileThemeData(
+          titleTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white)
+      ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+          menuStyle: MenuStyle(
+            backgroundColor: WidgetStatePropertyAll(Color(0xff333333)),
+          )
+      )
   );
 }

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:planner/app_theme.dart';
 import 'package:planner/app_controller.dart';
+import 'package:planner/providers/category_provider.dart';
+import 'package:planner/providers/navigation_provider.dart';
+import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/task_editor_page.dart';
 import 'package:planner/widgets/tasks_list.dart';
 import 'package:planner/globals.dart';
-
+import 'package:provider/provider.dart';
 void main() {
-  runApp(const Provider(
-    child: SimpleTodo(),
-  ));
+  runApp(MyProvider(child: SimpleTodo()));
 }
 
 class SimpleTodo extends StatelessWidget {
@@ -17,11 +18,24 @@ class SimpleTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = AppController.of(context);
-    return GetMaterialApp(
-      theme: provider.themeData,
-      debugShowCheckedModeBanner: false,
-      title: 'MinimalTodo',
-      home: const Home(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
+        ChangeNotifierProvider(create: (context) => NavigationProvider()),
+        ChangeNotifierProvider(create: (context) => CategoryProvider()),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.lightMode,
+        darkTheme: AppTheme.darkMode,
+        themeMode: ThemeMode.system,
+        debugShowCheckedModeBanner: false,
+        title: 'MinimalTodo',
+        initialRoute: '/home',
+        routes: {
+          '/home' : (context)=>const Home(),
+          '/editor' : (context)=>TaskEditorPage(),
+        },
+      ),
     );
   }
 }
@@ -37,10 +51,10 @@ class Home extends StatelessWidget {
       child: Scaffold(
         appBar: buildAppBar(provider,context),
         body: [
-          const TasksList(),
+          TasksList(),
           const Text('Text'),
         ][provider.selectedDestination],
-        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButton: buildFloatingActionButton(context),
         bottomNavigationBar: buildNavigationBar(provider, context),
       ),
     );
@@ -62,26 +76,14 @@ class Home extends StatelessWidget {
     return AppBar(
       toolbarHeight: MediaQuery.sizeOf(context).height * 0.06,
       title: const Text('Planner'),
-      actions: [
-        Switch(
-          value: provider.isDark,
-          activeColor: const Color(0x00414141),
-          thumbIcon: provider.icon,
-          onChanged: (newValue) {
-            provider.toggleTheme(newValue);
-          },
-        ),
-      ],
     );
   }
-  Widget buildFloatingActionButton() {
+  Widget buildFloatingActionButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 40.0),
       child: FloatingActionButton(
         onPressed: () {
-          Get.to( const TaskEditorPage(editMode: EditMode.newTask),
-            transition: Transition.upToDown,
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>TaskEditorPage(editMode: false,)));
         },
         tooltip: 'Add Task',
         elevation: 6,
