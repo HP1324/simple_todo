@@ -13,6 +13,7 @@ class TaskService{
   static Future<int> addTask(Task task) async {
     final database = await DatabaseService.openDb();
     final data = task.toJson();
+    debugPrint('Task adding to database ->-> ${task.toJson()}');
     final id = await database.insert('tasks', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;

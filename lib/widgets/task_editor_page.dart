@@ -6,23 +6,26 @@ import 'package:planner/main.dart';
 import 'package:planner/models/category.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/providers/category_provider.dart';
+import 'package:planner/providers/task_provider.dart';
+import 'package:planner/widgets/category_dialog.dart';
 import 'package:planner/widgets/planner_text_field.dart';
 import 'package:provider/provider.dart';
+
 //ignore: must_be_immutable
 class TaskEditorPage extends StatelessWidget {
-  TaskEditorPage({super.key, this.task,this.editMode});
+  TaskEditorPage({super.key, this.task, this.editMode});
   Task? task;
-   bool? editMode;
+  bool? editMode;
+  var titleController = TextEditingController();
+  var dropDownController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
-    var provider = AppController.of(context);
-    var categories = context.watch<CategoryProvider>().categories;
+    var readCategories = context.read<CategoryProvider>().categories;
+    var watchCategories = context.watch<CategoryProvider>().categories;
     return Scaffold(
         appBar: AppBar(
-          title: editMode!
-              ? const Text('Edit Task')
-              : const Text('New Task'),
-          titleSpacing: 0,
+          title: editMode! ? const Text('Edit Task') : const Text('New Task'),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
@@ -31,34 +34,53 @@ class TaskEditorPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 PlannerTextField(
-                  controller: provider.titleController,
+                  controller: titleController,
                   isMaxLinesNull: true,
                   isAutoFocus: true,
                   hintText: 'What\'s on your to-do list?',
                 ),
+                const SizedBox(height: 10),
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
                       child: DropdownMenu(
+                        menuHeight: 300,
+                        controller: dropDownController,
                         hintText: 'Select a category',
-                        initialSelection: categories,
+                        initialSelection: task != null ?  task!.categoryId: context.watch<CategoryProvider>().selectedCategory ,
                         width: MediaQuery.sizeOf(context).width * 0.85,
-                        dropdownMenuEntries: categories.map((e){
+                        dropdownMenuEntries:
+                            context.watch<CategoryProvider>().categories.map(
+                          (e) {
+                            debugPrint(
+                                'category inside entries : ${e.toString()}');
                             var categoryObj = CategoryModel.fromJson(e);
-                            return DropdownMenuEntry(value: categoryObj, label: categoryObj.categoryName);
-                        }
+                            return DropdownMenuEntry(
+                              value: categoryObj.categoryId,
+                              label: categoryObj.categoryName,
+                            );
+                          },
                         ).toList(),
+                        onSelected: (value){
+                          context.read<CategoryProvider>().selectedCategory = value!;
+                          debugPrint('Selected Category : ${context.read<CategoryProvider>().selectedCategory}');
+                        },
                       ),
                     ),
                     InkWell(
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         size: 50,
                       ),
-                      onTap:(){
-
-                      }
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return CategoryDialog();
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -89,7 +111,18 @@ class TaskEditorPage extends StatelessWidget {
                       color: AppTheme.tealShade600,
                       borderRadius: BorderRadius.circular(7)),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      Task task = Task(title: titleController.text,);
+                      var scaffoldMessenger = ScaffoldMessenger.of(context);
+                      var navigator = Navigator.of(context);
+                      int categoryId = context.read<CategoryProvider>().selectedCategory;
+                      if (await context.read<TaskProvider>().addTask(task,categoryId: categoryId)) {
+                        navigator.pop();
+                        showSnackBar(scaffoldMessenger, content: 'Task added');
+                      }else{
+
+                      }
+                    },
                     child: const Center(
                       child: Text(
                         'Save',

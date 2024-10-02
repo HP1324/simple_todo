@@ -1,3 +1,5 @@
+import 'package:planner/services/category_service.dart';
+
 class Task {
   Task({this.id, required this.title, this.isDone = false, this.categoryId});
 

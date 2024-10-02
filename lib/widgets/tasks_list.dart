@@ -51,6 +51,7 @@ class TasksList extends StatelessWidget {
               var scaffoldMessenger = ScaffoldMessenger.of(context);
               Task task = Task(title: value);
             if (await readProvider.addTask(task)) {
+              debugPrint('|||||||||| Inside of onSubmitted |||||||||||');
               showSnackBar(scaffoldMessenger, content: 'Task added');
               titleController.clear();
             } else {

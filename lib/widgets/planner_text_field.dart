@@ -9,6 +9,7 @@ class PlannerTextField extends StatelessWidget {
       required this.isMaxLinesNull,
       required this.isAutoFocus,
       required this.hintText,
+      this.fillColor,
       this.onSubmitted});
 
   final dynamic controller;
@@ -16,6 +17,7 @@ class PlannerTextField extends StatelessWidget {
   final bool isMaxLinesNull;
   final bool isAutoFocus;
   final String hintText;
+  final Color? fillColor;
   final void Function(String value)? onSubmitted;
 
   @override
@@ -30,7 +32,7 @@ class PlannerTextField extends StatelessWidget {
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 8),
         filled: true,
-        fillColor: AppTheme.cardTeal,
+        fillColor: fillColor ?? AppTheme.cardTeal,
         hintText: hintText,
         hintStyle: TextStyle(color: AppTheme.darkTeal, fontSize: 16),
         border: InputBorder.none,

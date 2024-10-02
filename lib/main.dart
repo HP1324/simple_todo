@@ -17,12 +17,11 @@ class SimpleTodo extends StatelessWidget {
   const SimpleTodo({super.key});
   @override
   Widget build(BuildContext context) {
-    var provider = AppController.of(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TaskProvider()),
-        ChangeNotifierProvider(create: (context) => NavigationProvider()),
-        ChangeNotifierProvider(create: (context) => CategoryProvider()),
+        ChangeNotifierProvider(create: (_) => TaskProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ],
       child: MaterialApp(
         theme: AppTheme.lightMode,
@@ -30,11 +29,7 @@ class SimpleTodo extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'MinimalTodo',
-        initialRoute: '/home',
-        routes: {
-          '/home' : (context)=>const Home(),
-          '/editor' : (context)=>TaskEditorPage(),
-        },
+        home: Home(),
       ),
     );
   }

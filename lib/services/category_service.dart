@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:planner/models/category.dart';
 import 'package:planner/services/database_service.dart';
 
 class CategoryService{
-  static Future<List<Map<String, dynamic>>> getCaegories() async {
+  static Future<List<Map<String, dynamic>>> getCategories() async {
     final database = await DatabaseService.openDb();
     return await database.query('categories');
   }

@@ -14,59 +14,88 @@ class CategoryDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      width: 200,
-      child: Column(
-        children: [
-          PlannerTextField(
-            controller: categoryController,
-            isMaxLinesNull: false,
-            isAutoFocus: true,
-            hintText: 'Add new category here',
-          ),
-          SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Center(
+      child: Material(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          height: 250,
+          width: MediaQuery.sizeOf(context).width * 0.8,
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppTheme.tealShade100),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: () {
-                  categoryController.clear();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 90,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppTheme.tealShade100,
-                    border: Border.all(color: AppTheme.darkTeal, width: 0.5),
-                  ),
-                  child: const Text('Cancel',
-                      style: TextStyle(color: AppTheme.darkTeal)),
-                ),
+              PlannerTextField(
+                controller: categoryController,
+                isMaxLinesNull: false,
+                isAutoFocus: true,
+                hintText: 'Add new category here',
               ),
-              InkWell(
-                onTap: () async{
-                  var scaffoldMessenger = ScaffoldMessenger.of(context);
-                  if(await context.read<CategoryProvider>().addCategory(categoryName: categoryController.text)){
-                    showSnackBar(scaffoldMessenger, content: 'Category added');
-                  }
-                },
-                child: Container(
-                  width: 90,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppTheme.darkTeal,
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      categoryController.clear();
+                      Navigator.pop(context);
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: Container(
+                      width: 90,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: AppTheme.tealShade100,
+                        border:
+                            Border.all(color: AppTheme.darkTeal, width: 0.5),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Cancel',style:TextStyle(color: AppTheme.darkTeal, fontSize: 16),
+                        ),
+                      ),
+                    ),
                   ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(color: AppTheme.tealShade100),
+                  InkWell(
+                    onTap: () async {
+                      var scaffoldMessenger = ScaffoldMessenger.of(context);
+                      var navigator = Navigator.of(context);
+                      var readCategoryProvider = context.read<CategoryProvider>();
+                      if (await context
+                          .read<CategoryProvider>()
+                          .addCategory(categoryName: categoryController.text)) {
+
+                        navigator.pop();
+                        Future.delayed(const Duration(milliseconds: 1000), () {
+                          showSnackBar(scaffoldMessenger,
+                              content: 'Category added');
+                        });
+                      } else {}
+                    },
+                    child: Container(
+                      width: 90,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: AppTheme.darkTeal,
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Save',
+                          style:
+                              TextStyle(color: Color(0xffffffff), fontSize: 16),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

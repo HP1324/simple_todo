@@ -9,30 +9,30 @@ CategoryModel categoryModelFromJson(String str) => CategoryModel.fromJson(json.d
 String categoryModelToJson(CategoryModel data) => json.encode(data.toJson());
 
 class CategoryModel {
-  final int? caetgoryId;
+  final int? categoryId;
   final String categoryName;
 
   const CategoryModel({
-    this.caetgoryId,
+    this.categoryId,
     required this.categoryName,
   });
 
   CategoryModel copyWith({
-    int? caetgoryId,
+    int? categoryId,
     String? categoryName,
   }) =>
       CategoryModel(
-        caetgoryId: caetgoryId ?? this.caetgoryId,
+        categoryId: categoryId ?? this.categoryId,
         categoryName: categoryName ?? this.categoryName,
       );
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-    caetgoryId: json["caetgoryId"],
+    categoryId: json["categoryId"],
     categoryName: json["categoryName"],
   );
 
   Map<String, dynamic> toJson() => {
-    "caetgoryId": caetgoryId,
+    "categoryId": categoryId,
     "categoryName": categoryName,
   };
 }

@@ -9,13 +9,14 @@ class DatabaseService {
       title TEXT,
       categoryId INTEGER,
       isDone INTEGER DEFAULT 0,
-      FOREIGN KEY(categoryId) REFERENCES categories (id)
+      FOREIGN KEY(categoryId) REFERENCES categories (categoryId)
       )""");
     await database.execute(""" CREATE TABLE categories(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      category TEXT UNIQUE
+      categoryId INTEGER PRIMARY KEY AUTOINCREMENT,
+      categoryName TEXT UNIQUE
+      )
      """);
-    await database.execute("""INSERT INTO categories VALUES('Self improvement'),('Family'),('Work')""");
+    await database.execute("""INSERT INTO categories (categoryName) VALUES('Self improvement'),('Family'),('Work')""");
   }
 
   static Future<Database> openDb() async {

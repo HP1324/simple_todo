@@ -4,7 +4,7 @@ import 'package:planner/services/category_service.dart';
 import 'package:planner/services/task_service.dart';
 
 class TaskProvider extends ChangeNotifier{
-
+  TaskProvider(){ _refreshTasks();}
   List<Map<String, dynamic>> tasks = [];
 
 
@@ -20,7 +20,8 @@ class TaskProvider extends ChangeNotifier{
 
   bool isNewTaskAdded = false;
 
-  Future<bool> addTask(Task task) async {
+  Future<bool> addTask(Task task, {int? categoryId}) async {
+    task.categoryId = categoryId ?? 1;
     task.title = task.title.trim();
     if (task.title.isNotEmpty) {
       await TaskService.addTask(task);
