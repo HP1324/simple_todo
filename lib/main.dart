@@ -6,6 +6,8 @@ import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/task_editor_page.dart';
 import 'package:planner/widgets/tasks_list.dart';
 import 'package:provider/provider.dart';
+
+import 'providers/filter_provider.dart';
 void main() {
   runApp( const SimpleTodo());
 }
@@ -19,6 +21,7 @@ class SimpleTodo extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TaskProvider()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        ChangeNotifierProvider(create: (_) => FilterProvider()),
       ],
       child: MaterialApp(
         theme: AppTheme.lightMode,

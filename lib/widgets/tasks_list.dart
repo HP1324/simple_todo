@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
 import 'package:planner/models/task.dart';
+import 'package:planner/providers/filter_provider.dart';
 import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/planner_text_field.dart';
 import 'package:planner/widgets/empty_list_placeholder.dart';
@@ -16,9 +18,19 @@ class TasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var readProvider = context.read<TaskProvider>();
-    var tasks = context.watch<TaskProvider>().tasks;
+    var watchProvider = context.watch<TaskProvider>();
+    var filter = context.watch<FilterProvider>().filterDone;
+    var tasks = filter == 0 ? watchProvider.allTasks : filter == 1 ? watchProvider.tasksDone :  watchProvider.tasksNotDone;
+
     return Column(
       children: [
+        if (tasks.isNotEmpty || filter != 0)
+          const Row(
+            children: [
+              TaskFilterChip(label: 'Done'),
+              TaskFilterChip(label: 'Undone'),
+            ],
+          ),
         if (tasks.isEmpty) const Spacer(),
         if (tasks.isEmpty) const EmptyListPlaceholder(),
         Expanded(
@@ -69,3 +81,31 @@ class TasksList extends StatelessWidget {
   }
 }
 
+class TaskFilterChip extends StatelessWidget {
+  const TaskFilterChip(
+      {super.key, required this.label});
+  final String label;
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FilterProvider>(
+      builder: (_,provider,__) {
+        var selectedChip = provider.chipSelection[label];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: FilterChip(
+            selected: selectedChip!,
+            onSelected: (selected){
+              provider.toggleSelected(label, selected);
+            },
+            label: Text(label, style: TextStyle(color: selectedChip ? Colors.white:Colors.black),),
+            selectedColor: AppTheme.darkTeal,
+            checkmarkColor: Colors.white,
+            backgroundColor: AppTheme.tealShade100,
+            side: BorderSide.none,
+          ),
+        );
+      }
+    );
+  }
+
+}

@@ -4,14 +4,20 @@ import 'package:planner/services/task_service.dart';
 
 class TaskProvider extends ChangeNotifier{
   TaskProvider(){ _refreshTasks();}
-  List<Map<String, dynamic>> tasks = [];
+  List<Map<String, dynamic>> allTasks = [];
+  List<Map<String, dynamic>> tasksDone = [];
+  List<Map<String, dynamic>> tasksNotDone = [];
 
 
   Future<void> _refreshTasks() async {
     debugPrint( '************inside refreshTasks()************');
-      tasks = await TaskService.getTasks();
+      allTasks = await TaskService.getTasks();
+    tasksDone = allTasks.where((task) => Task.fromJson(task).isDone).toList();
+    tasksNotDone = allTasks.where((task) => !(Task.fromJson(task).isDone)).toList();
+    debugPrint('These tasks are done $tasksDone');
+      debugPrint('These tasks are not done $tasksNotDone');
       notifyListeners();
-      debugPrint(tasks.toString());
+      debugPrint(allTasks.toString());
     debugPrint('************end of refreshTasks()************');
   }
 
