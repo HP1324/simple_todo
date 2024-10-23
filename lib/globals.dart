@@ -16,13 +16,3 @@ showSnackBar(
     ));
 }
 
-///Enum to tell the dialog either it is editing or creating a new task
-enum EditMode {
-  newTask,
-  editTask,
-}
-
-enum ListType {
-  tasksList,
-  tasksDoneList,
-}

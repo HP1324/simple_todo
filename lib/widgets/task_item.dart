@@ -25,8 +25,8 @@ class TaskTile extends StatelessWidget {
             showSnackBar(scaffoldMessenger,
                 content:
                     task.isDone ? 'Task marked undone' : 'Task marked as done');
-            readProvider.toggleChecked(task, newValue);
-            await readProvider.toggleDone(task);
+            // readProvider.toggleChecked(task, newValue);
+            await readProvider.toggleDone(task,newValue);
           },
         ),
         title: Text(task.title),

@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class TaskService {
   static Future<List<Map<String, dynamic>>> getTasks() async {
     final database = await DatabaseService.openDb();
+
     return await database.query('tasks');
   }
 
