@@ -102,10 +102,10 @@ class AppTheme {
         actionsIconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff333333), // A dark gray color
       ),
-      scaffoldBackgroundColor: Color(0xff444444), // A slightly lighter dark gray color
+      scaffoldBackgroundColor: const Color(0xff444444), // A slightly lighter dark gray color
       navigationBarTheme: NavigationBarThemeData(
         elevation: 5,
-        backgroundColor: Color(0xff333333),
+        backgroundColor: const Color(0xff333333),
         indicatorColor: Colors.white,
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {

@@ -1,15 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
-import 'package:planner/models/category.dart';
 import 'package:planner/providers/category_provider.dart';
-import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/planner_text_field.dart';
 import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable
 class CategoryDialog extends StatelessWidget {
+  CategoryDialog({super.key});
   var categoryController = TextEditingController();
 
   @override
@@ -63,7 +61,7 @@ class CategoryDialog extends StatelessWidget {
                     onTap: () async {
                       var scaffoldMessenger = ScaffoldMessenger.of(context);
                       var navigator = Navigator.of(context);
-                      var readCategoryProvider = context.read<CategoryProvider>();
+                      context.read<CategoryProvider>();
                       if (await context
                           .read<CategoryProvider>()
                           .addCategory(categoryName: categoryController.text)) {
@@ -82,8 +80,8 @@ class CategoryDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                         color: AppTheme.darkTeal,
                       ),
-                      child: Center(
-                        child: const Text(
+                      child: const Center(
+                        child: Text(
                           'Save',
                           style:
                               TextStyle(color: Color(0xffffffff), fontSize: 16),

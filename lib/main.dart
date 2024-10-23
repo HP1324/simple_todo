@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:planner/app_theme.dart';
-import 'package:planner/app_controller.dart';
 import 'package:planner/providers/category_provider.dart';
 import 'package:planner/providers/navigation_provider.dart';
 import 'package:planner/providers/task_provider.dart';
 import 'package:planner/widgets/task_editor_page.dart';
 import 'package:planner/widgets/tasks_list.dart';
-import 'package:planner/globals.dart';
 import 'package:provider/provider.dart';
 void main() {
-  runApp(MyProvider(child: SimpleTodo()));
+  runApp( const SimpleTodo());
 }
 
 class SimpleTodo extends StatelessWidget {
@@ -29,7 +26,7 @@ class SimpleTodo extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'MinimalTodo',
-        home: Home(),
+        home: const Home(),
       ),
     );
   }
@@ -40,36 +37,19 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = AppController.of(context);
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: buildAppBar(provider,context),
-        body: [
-          TasksList(),
-          const Text('Text'),
-        ][provider.selectedDestination],
+        appBar: buildAppBar(context),
+        body: TasksList(),
         floatingActionButton: buildFloatingActionButton(context),
-        bottomNavigationBar: buildNavigationBar(provider, context),
       ),
     );
   }
 
-  NavigationBar buildNavigationBar(StateProvider provider, BuildContext context) {
-    return NavigationBar(
-        selectedIndex: provider.selectedDestination,
-        height: MediaQuery.sizeOf(context).height * 0.0972,
-        destinations: const [
-          NavigationDestination(icon: Icon(Iconsax.task), label: 'Todo'),
-          NavigationDestination(icon: Icon(Iconsax.setting), label: 'Settings'),
-        ],
-        onDestinationSelected: (selected) =>
-            provider.onDestinationSelected(selected),
-      );
-  }
-  AppBar buildAppBar(StateProvider provider, BuildContext context) {
+  AppBar buildAppBar( BuildContext context) {
     return AppBar(
-      toolbarHeight: MediaQuery.sizeOf(context).height * 0.06,
+      toolbarHeight: MediaQuery.sizeOf(context).height * 0.07,
       title: const Text('Planner'),
     );
   }

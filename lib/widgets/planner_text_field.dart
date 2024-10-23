@@ -30,11 +30,11 @@ class PlannerTextField extends StatelessWidget {
       autofocus: isAutoFocus,
       cursorColor: AppTheme.darkTeal,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 8),
+        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8),
         filled: true,
         fillColor: fillColor ?? AppTheme.cardTeal,
         hintText: hintText,
-        hintStyle: TextStyle(color: AppTheme.darkTeal, fontSize: 16),
+        hintStyle: const TextStyle(color: AppTheme.darkTeal, fontSize: 16),
         border: InputBorder.none,
       ),
       onSubmitted: onSubmitted,

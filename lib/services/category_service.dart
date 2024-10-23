@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:planner/models/category.dart';
 import 'package:planner/services/database_service.dart';
 

@@ -7,7 +7,6 @@ class CategoryProvider extends ChangeNotifier {
     _refreshCategories();
   }
   List<Map<String, dynamic>> categories = [];
-  var selectedCategory = 0;
   void _refreshCategories() async {
     debugPrint('|||||||||| Inside refresh categories |||||||||||');
     categories = await CategoryService.getCategories();
@@ -20,7 +19,6 @@ class CategoryProvider extends ChangeNotifier {
     if (categoryName.trim().isNotEmpty) {
       CategoryModel categoryObj = CategoryModel(categoryName: categoryName);
       await CategoryService.addCategory(category: categoryObj);
-      selectedCategory = categoryObj.categoryId!;
       _refreshCategories();
       return true;
     }

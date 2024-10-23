@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:planner/app_controller.dart';
 import 'package:planner/app_theme.dart';
 import 'package:planner/globals.dart';
-import 'package:planner/main.dart';
 import 'package:planner/models/category.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/providers/category_provider.dart';
@@ -11,18 +9,21 @@ import 'package:planner/widgets/category_dialog.dart';
 import 'package:planner/widgets/planner_text_field.dart';
 import 'package:provider/provider.dart';
 
+int selectedCategory = 1;
+
 //ignore: must_be_immutable
 class TaskEditorPage extends StatelessWidget {
-  TaskEditorPage({super.key, this.task, this.editMode});
-  Task? task;
+  TaskEditorPage(
+      {super.key, this.taskToEdit, this.taskToEditID, this.editMode});
+  Task? taskToEdit;
+  int? taskToEditID;
   bool? editMode;
   var titleController = TextEditingController();
   var dropDownController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    var readCategories = context.read<CategoryProvider>().categories;
-    var watchCategories = context.watch<CategoryProvider>().categories;
+    if (editMode!) selectedCategory = taskToEdit!.categoryId as int;
     return Scaffold(
         appBar: AppBar(
           title: editMode! ? const Text('Edit Task') : const Text('New Task'),
@@ -33,11 +34,17 @@ class TaskEditorPage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 10),
+                if (editMode!)
+                  Text(
+                    'old title: ${taskToEdit!.title}',
+                  ),
                 PlannerTextField(
                   controller: titleController,
                   isMaxLinesNull: true,
                   isAutoFocus: true,
-                  hintText: 'What\'s on your to-do list?',
+                  hintText: editMode!
+                      ? 'What needs changing?'
+                      : 'What\'s on your to-do list?',
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 20),
@@ -48,7 +55,7 @@ class TaskEditorPage extends StatelessWidget {
                         menuHeight: 300,
                         controller: dropDownController,
                         hintText: 'Select a category',
-                        initialSelection: task != null ?  task!.categoryId: context.watch<CategoryProvider>().selectedCategory ,
+                        initialSelection: selectedCategory,
                         width: MediaQuery.sizeOf(context).width * 0.85,
                         dropdownMenuEntries:
                             context.watch<CategoryProvider>().categories.map(
@@ -62,9 +69,8 @@ class TaskEditorPage extends StatelessWidget {
                             );
                           },
                         ).toList(),
-                        onSelected: (value){
-                          context.read<CategoryProvider>().selectedCategory = value!;
-                          debugPrint('Selected Category : ${context.read<CategoryProvider>().selectedCategory}');
+                        onSelected: (selected) {
+                          selectedCategory = int.parse(selected.toString());
                         },
                       ),
                     ),
@@ -112,16 +118,27 @@ class TaskEditorPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(7)),
                   child: InkWell(
                     onTap: () async {
-                      Task task = Task(title: titleController.text,);
-                      var scaffoldMessenger = ScaffoldMessenger.of(context);
+                      var messenger = ScaffoldMessenger.of(context);
                       var navigator = Navigator.of(context);
-                      int categoryId = context.read<CategoryProvider>().selectedCategory;
-                      if (await context.read<TaskProvider>().addTask(task,categoryId: categoryId)) {
+                      final taskProvider = context.read<TaskProvider>();
+                      if (!editMode!) {
+                        Task task = Task(
+                            title: titleController.text,
+                            categoryId: selectedCategory);
+                        if (await taskProvider.addTask(task)) {
+                          navigator.pop();
+                          showSnackBar(messenger, content: 'Task added');
+                        }
+                      } else {
+                        await taskProvider.editTask(
+                          taskToEdit: taskToEdit!,
+                          title: titleController.text.trim().isEmpty? null: titleController.text,
+                          categoryId: selectedCategory != taskToEdit!.categoryId? selectedCategory: null,
+                        );
+                        showSnackBar(messenger, content: 'Task edited');
                         navigator.pop();
-                        showSnackBar(scaffoldMessenger, content: 'Task added');
-                      }else{
-
                       }
+                      selectedCategory = 1;
                     },
                     child: const Center(
                       child: Text(

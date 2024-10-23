@@ -1,7 +1,7 @@
-import 'package:planner/services/category_service.dart';
+
 
 class Task {
-  Task({this.id, required this.title, this.isDone = false, this.categoryId});
+  Task({this.id, required this.title, this.isDone = false, this.categoryId });
 
   int? id;
   String title;
@@ -45,7 +45,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) => Task(
     id: json['id'],
     title: json['title'] ?? '',
-    categoryId: json['categoryId'],
     isDone: json['isDone'] == 1,
+    categoryId: json['categoryId'],
   );
 }

@@ -35,7 +35,7 @@ class TaskTile extends StatelessWidget {
             return [
               PopupMenuItem(
                 onTap: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (_) => TaskEditorPage(editMode: true,)));
+                  Navigator.push(context,MaterialPageRoute(builder: (_) => TaskEditorPage(editMode: true,taskToEdit:task,)));
                 },
                 child: const Text(
                   'Edit',
