@@ -11,9 +11,9 @@ My first flutter app
 - Edit task
 - Mark task as done
 - Delete task
+- Data is stored locally using sqflite package
 
 ### Features to add in future
-- Store data locally with Shared Preferences
 - Implement dismissible widget to delete tasks and to mark tasks as done
 - Ask for confirmation when deleting a task, also ask to remember the choice
 -  Allow to select multiple tasks to delete them or mark them as done, editing multiple tasks at the same time does not make sense.
