@@ -6,7 +6,6 @@ import 'package:sqflite/sqflite.dart';
 class TaskService {
   static Future<List<Map<String, dynamic>>> getTasks() async {
     final database = await DatabaseService.openDb();
-
     return await database.query('tasks');
   }
 
@@ -14,26 +13,23 @@ class TaskService {
     final database = await DatabaseService.openDb();
     final data = task.toJson();
     debugPrint('Task adding to database ->-> $data');
-    await database.insert('tasks', data,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await database.insert('tasks', data, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<void> toggleDone(Task task) async {
+  static Future<void> toggleDone(int id, bool newValue) async {
     final database = await DatabaseService.openDb();
-    int isDone = task.isDone ? 1 : 0;
+    int isDone = newValue ? 1 : 0;
     try {
-      await database.update('tasks', {'isDone': isDone},
-          where: 'id = ?', whereArgs: [task.id]);
+      await database.update('tasks', {'isDone': isDone}, where: 'id = ?', whereArgs: [id]);
     } catch (exception) {
-      debugPrint('something went wrong when marking taskAsDone: $exception');
+      debugPrint('something went wrong when marking task as done: ${exception.toString()}');
     }
   }
 
-  static Future<int> editTask(Task task) async {
+  static Future<int> editTask({required Map<String, dynamic> newTask}) async {
     final database = await DatabaseService.openDb();
-    final data = task.toJson();
-    final result = await database
-        .update('tasks', data, where: 'id = ?', whereArgs: [task.id]);
+    final result =
+        await database.update('tasks', newTask, where: 'id = ?', whereArgs: [newTask['id']]);
     return result;
   }
 
@@ -45,5 +41,4 @@ class TaskService {
       debugPrint('Something went wrong when deleting the task: $exception');
     }
   }
-
 }

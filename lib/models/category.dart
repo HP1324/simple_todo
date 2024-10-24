@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-CategoryModel categoryModelFromJson(String str) => CategoryModel.fromJson(json.decode(str));
+CategoryModel categoryModelFromJson(String str) =>
+    CategoryModel.fromJson(json.decode(str));
 
 String categoryModelToJson(CategoryModel data) => json.encode(data.toJson());
 
@@ -27,12 +28,12 @@ class CategoryModel {
       );
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-    categoryId: json["categoryId"],
-    categoryName: json["categoryName"],
-  );
+        categoryId: json["categoryId"],
+        categoryName: json["categoryName"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "categoryId": categoryId,
-    "categoryName": categoryName,
-  };
+        "categoryId": categoryId,
+        "categoryName": categoryName,
+      };
 }

@@ -52,7 +52,9 @@ class CategoryDialog extends StatelessWidget {
                       ),
                       child: const Center(
                         child: Text(
-                          'Cancel',style:TextStyle(color: AppTheme.darkTeal, fontSize: 16),
+                          'Cancel',
+                          style:
+                              TextStyle(color: AppTheme.darkTeal, fontSize: 16),
                         ),
                       ),
                     ),
@@ -65,7 +67,6 @@ class CategoryDialog extends StatelessWidget {
                       if (await context
                           .read<CategoryProvider>()
                           .addCategory(categoryName: categoryController.text)) {
-
                         navigator.pop();
                         Future.delayed(const Duration(milliseconds: 1000), () {
                           showSnackBar(scaffoldMessenger,

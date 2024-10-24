@@ -1,11 +1,9 @@
-
-
 class Task {
-  Task({this.id, required this.title, this.isDone = false, this.categoryId });
+  Task({this.id, required this.title, this.isDone = false, this.categoryId});
 
   int? id;
   String title;
-  int? categoryId;  // Foreign key representing the category
+  int? categoryId; // Foreign key representing the category
   bool isDone;
 
   Task copyWith({
@@ -35,17 +33,17 @@ class Task {
 
   // Convert Task to JSON
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'categoryId': categoryId,
-    'isDone': isDone ? 1 : 0,
-  };
+        'id': id,
+        'title': title,
+        'categoryId': categoryId,
+        'isDone': isDone ? 1 : 0,
+      };
 
   // Create a Task from JSON
   factory Task.fromJson(Map<String, dynamic> json) => Task(
-    id: json['id'],
-    title: json['title'] ?? '',
-    isDone: json['isDone'] == 1,
-    categoryId: json['categoryId'],
-  );
+        id: json['id'],
+        title: json['title'] ?? '',
+        isDone: json['isDone'] == 1,
+        categoryId: json['categoryId'],
+      );
 }

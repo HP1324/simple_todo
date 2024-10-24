@@ -15,20 +15,15 @@ class AppTheme {
   static const tealShade900 = Color(0xFF004D40); // #004D40
   static const cardTeal = Color(0xffC8E6E6);
 
-  static const popupItemStyle = TextStyle(
-      color: darkTeal, fontWeight: FontWeight.bold);
+  static const popupItemStyle =
+      TextStyle(color: darkTeal, fontWeight: FontWeight.bold);
 
   static ThemeData lightMode = ThemeData(
-      fontFamily: GoogleFonts
-          .gabarito()
-          .fontFamily,
+      fontFamily: GoogleFonts.gabarito().fontFamily,
       brightness: Brightness.light,
       appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: tealShade50),
-        titleTextStyle: TextStyle(
-            fontSize: 25,
-            color: tealShade50
-        ),
+        titleTextStyle: TextStyle(fontSize: 25, color: tealShade50),
         actionsIconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff00796B),
       ),
@@ -69,40 +64,34 @@ class AppTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         checkColor: const WidgetStatePropertyAll(tealShade100),
-        fillColor: WidgetStateProperty.resolveWith(
-                (states) {
-              if (states.contains(WidgetState.selected)) {
-                return darkTeal;
-              }
-              return null;
-            }
-        ),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return darkTeal;
+          }
+          return null;
+        }),
       ),
       listTileTheme: const ListTileThemeData(
-          titleTextStyle: TextStyle(fontWeight: FontWeight.w500,
+          titleTextStyle: TextStyle(
+              fontWeight: FontWeight.w500,
               fontSize: 15,
-              color: Color(0xff000000))
-      ),
+              color: Color(0xff000000))),
       dropdownMenuTheme: const DropdownMenuThemeData(
           menuStyle: MenuStyle(
-            backgroundColor: WidgetStatePropertyAll(tealShade50),
-          )
-      )
-  );
+        backgroundColor: WidgetStatePropertyAll(tealShade50),
+      )));
 
   static ThemeData darkMode = ThemeData(
       fontFamily: GoogleFonts.gabarito().fontFamily,
       brightness: Brightness.dark,
       appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(
-            fontSize: 25,
-            color: Colors.white
-        ),
+        titleTextStyle: TextStyle(fontSize: 25, color: Colors.white),
         actionsIconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff333333), // A dark gray color
       ),
-      scaffoldBackgroundColor: const Color(0xff444444), // A slightly lighter dark gray color
+      scaffoldBackgroundColor:
+          const Color(0xff444444), // A slightly lighter dark gray color
       navigationBarTheme: NavigationBarThemeData(
         elevation: 5,
         backgroundColor: const Color(0xff333333),
@@ -126,7 +115,8 @@ class AppTheme {
       ),
       dialogTheme: const DialogTheme(
         backgroundColor: Color(0xff333333),
-        titleTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
       ),
       cardTheme: const CardTheme(
         color: Color(0xff444444),
@@ -138,21 +128,18 @@ class AppTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         checkColor: const WidgetStatePropertyAll(Colors.white),
-        fillColor: WidgetStateProperty.resolveWith(
-                (states){
-              if(states.contains(WidgetState.selected)){
-                return Colors.white;
-              } return null;
-            }
-        ),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return Colors.white;
+          }
+          return null;
+        }),
       ),
       listTileTheme: const ListTileThemeData(
-          titleTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white)
-      ),
+          titleTextStyle: TextStyle(
+              fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white)),
       dropdownMenuTheme: const DropdownMenuThemeData(
           menuStyle: MenuStyle(
-            backgroundColor: WidgetStatePropertyAll(Color(0xff333333)),
-          )
-      )
-  );
+        backgroundColor: WidgetStatePropertyAll(Color(0xff333333)),
+      )));
 }

@@ -132,8 +132,12 @@ class TaskEditorPage extends StatelessWidget {
                       } else {
                         await taskProvider.editTask(
                           taskToEdit: taskToEdit!,
-                          title: titleController.text.trim().isEmpty? null: titleController.text,
-                          categoryId: selectedCategory != taskToEdit!.categoryId? selectedCategory: null,
+                          title: titleController.text.trim().isEmpty
+                              ? null
+                              : titleController.text,
+                          categoryId: selectedCategory != taskToEdit!.categoryId
+                              ? selectedCategory
+                              : null,
                         );
                         showSnackBar(messenger, content: 'Task edited');
                         navigator.pop();

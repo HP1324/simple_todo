@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
+  DatabaseService._internal();
+  static final DatabaseService instance = DatabaseService._internal();
   static Future<void> createTables(Database database) async {
     await database.execute(""" CREATE TABLE categories(
       categoryId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,8 +20,7 @@ class DatabaseService {
 
     await database.execute(
         """INSERT INTO categories (categoryName) VALUES('Self improvement'),('Family'),('Work')""");
-    // final categories = await database.rawQuery('select * from categories');
-    // debugPrint('$categories');
+
   }
 
   static Future<Database> openDb() async {
